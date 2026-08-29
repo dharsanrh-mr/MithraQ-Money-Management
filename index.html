@@ -4506,4 +4506,434 @@ const g=window.go;if(typeof g==='function')window.go=function(){let x=g.apply(th
 document.addEventListener('DOMContentLoaded',()=>setTimeout(run,50));window.addEventListener('storage',()=>setTimeout(run,30));setTimeout(run,150);
 })();
 </script>
+<script id="mq2-new-features">
+(function(){
+'use strict';
+try{
+
+// ---------- helpers reused from app (already defined globally): d, save, money, esc, $, $$, go ----------
+function mq2cm(){ return new Date().toISOString().slice(0,7); }
+function mq2esc(v){ return (window.esc? esc(v): String(v??'')); }
+
+// ---------- defaults ----------
+d.categoryBudgets = (d.categoryBudgets && typeof d.categoryBudgets==='object') ? d.categoryBudgets : {};
+d.recurringExpenses = Array.isArray(d.recurringExpenses) ? d.recurringExpenses : [];
+
+// ================= 1) RECURRING EXPENSES (auto-add each month) =================
+function mq2ProcessRecurring(){
+  const month = mq2cm();
+  let changed = false;
+  (d.recurringExpenses||[]).forEach(r=>{
+    if(!r.active) return;
+    const already = (d.expenses||[]).some(x=>x.recurringId===r.id && (x.date||'').startsWith(month));
+    if(!already){
+      const day = String(Math.min(28,Math.max(1,Number(r.day)||1))).padStart(2,'0');
+      d.expenses.unshift({id:Date.now()+Math.floor(Math.random()*1000), title:r.title, amount:Number(r.amount)||0, category:r.category||'Other', date:month+'-'+day, recurringId:r.id, tags:['recurring']});
+      changed = true;
+    }
+  });
+  if(changed){ try{ mqPersist(); }catch(e){} }
+}
+mq2ProcessRecurring();
+
+function mq2OpenRecurringForm(){
+  const f=document.getElementById('mq2RecurringForm');
+  if(f) f.style.display = (f.style.display==='none'||!f.style.display) ? 'block' : 'none';
+}
+function mq2SaveRecurring(){
+  const t=(document.getElementById('mq2RecTitle').value||'').trim();
+  const a=Number(document.getElementById('mq2RecAmount').value||0);
+  const c=(document.getElementById('mq2RecCategory').value||'Other').trim();
+  const dday=Math.min(28,Math.max(1,Number(document.getElementById('mq2RecDay').value||1)));
+  if(!t||!a){ alert('Enter a name and amount'); return; }
+  d.recurringExpenses.unshift({id:Date.now(),title:t,amount:a,category:c,day:dday,active:true});
+  document.getElementById('mq2RecTitle').value='';
+  document.getElementById('mq2RecAmount').value='';
+  document.getElementById('mq2RecCategory').value='';
+  document.getElementById('mq2RecDay').value='';
+  document.getElementById('mq2RecurringForm').style.display='none';
+  mq2ProcessRecurring();
+  save();
+  mq2RenderRecurring();
+}
+function mq2ToggleRecurring(id){
+  const r=(d.recurringExpenses||[]).find(x=>x.id===id);
+  if(r) r.active=!r.active;
+  save();
+  mq2RenderRecurring();
+}
+function mq2DeleteRecurring(id){
+  d.recurringExpenses=(d.recurringExpenses||[]).filter(x=>x.id!==id);
+  save();
+  mq2RenderRecurring();
+}
+function mq2RenderRecurring(){
+  const el=document.getElementById('mq2RecurringList');
+  if(!el) return;
+  const list=d.recurringExpenses||[];
+  el.innerHTML = list.length ? list.map(r=>
+    '<div class="row"><div><b>'+mq2esc(r.title)+'</b><div class="muted">'+mq2esc(r.category||'Other')+' \u2022 Day '+r.day+' of month \u2022 '+money(r.amount)+(r.active?'':' (paused)')+'</div></div>'+
+    '<button class="del" onclick="mq2ToggleRecurring('+r.id+')">'+(r.active?'Pause':'Resume')+'</button>'+
+    '<button class="del" onclick="mq2DeleteRecurring('+r.id+')">Delete</button></div>'
+  ).join('') : '<div class="muted">No recurring expenses yet. Add rent, subscriptions, EMIs you already track elsewhere, etc.</div>';
+}
+window.mq2OpenRecurringForm=mq2OpenRecurringForm;
+window.mq2SaveRecurring=mq2SaveRecurring;
+window.mq2ToggleRecurring=mq2ToggleRecurring;
+window.mq2DeleteRecurring=mq2DeleteRecurring;
+window.mq2RenderRecurring=mq2RenderRecurring;
+
+// ================= 2) CATEGORY BUDGETS (inject into Budget page) =================
+function mq2SaveCategoryBudget(){
+  const name=(document.getElementById('mq2CatBudgetName').value||'').trim();
+  const amount=Number(document.getElementById('mq2CatBudgetAmount').value||0);
+  if(!name||!amount){ alert('Enter category and monthly limit'); return; }
+  d.categoryBudgets[name]=amount;
+  document.getElementById('mq2CatBudgetName').value='';
+  document.getElementById('mq2CatBudgetAmount').value='';
+  save();
+  mq2RenderCategoryBudgets();
+}
+function mq2DeleteCategoryBudget(name){
+  delete d.categoryBudgets[name];
+  save();
+  mq2RenderCategoryBudgets();
+}
+function mq2RenderCategoryBudgets(){
+  const el=document.getElementById('mq2CategoryBudgetList');
+  if(!el) return;
+  const month=mq2cm();
+  const spend={};
+  (d.expenses||[]).filter(x=>(x.date||'').startsWith(month)).forEach(x=>{
+    const c=x.category||'Other';
+    spend[c]=(spend[c]||0)+(Number(x.amount)||0);
+  });
+  const cats=Object.keys(d.categoryBudgets||{});
+  el.innerHTML = cats.length ? cats.map(c=>{
+    const limit=d.categoryBudgets[c];
+    const used=spend[c]||0;
+    const pct=limit? Math.min(100, used/limit*100):0;
+    const over=used>limit;
+    return '<div class="settings-backup-status" style="margin-bottom:10px">'+
+      '<b>'+mq2esc(c)+'</b> \u2014 '+money(used)+' / '+money(limit)+' ('+Math.round(pct)+'%)'+
+      '<div style="background:rgba(120,100,160,.15);border-radius:8px;height:8px;margin-top:4px;overflow:hidden">'+
+      '<div style="height:100%;width:'+pct+'%;background:'+(over?'#e11d48':'#16a34a')+'"></div></div>'+
+      '<button class="del" onclick="mq2DeleteCategoryBudget(\''+c.replace(/'/g,"\\'")+'\')" style="margin-top:6px">Remove</button></div>';
+  }).join('') : '<div class="muted">No category budgets set yet. Add one above (e.g. Food \u20b96000/month).</div>';
+}
+window.mq2SaveCategoryBudget=mq2SaveCategoryBudget;
+window.mq2DeleteCategoryBudget=mq2DeleteCategoryBudget;
+window.mq2RenderCategoryBudgets=mq2RenderCategoryBudgets;
+
+// ================= 3) TAGS FOR EXPENSES =================
+let mq2ActiveTagFilter='All';
+function mq2AllTags(){
+  const s=new Set();
+  (d.expenses||[]).forEach(x=>(x.tags||[]).forEach(t=>t&&s.add(t)));
+  return Array.from(s).sort();
+}
+function mq2PopulateTagSelect(){
+  const sel=document.getElementById('mq2TagExpenseSelect');
+  if(!sel) return;
+  const arr=(d.expenses||[]).slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+  sel.innerHTML = arr.map(x=>'<option value="'+x.id+'">'+mq2esc(x.title)+' \u2022 '+mq2esc(x.date||'')+' \u2022 '+money(x.amount)+'</option>').join('');
+  if(sel.dataset.bound) return;
+  sel.dataset.bound='1';
+  sel.addEventListener('change', mq2FillTagInputFromSelection);
+}
+function mq2FillTagInputFromSelection(){
+  const sel=document.getElementById('mq2TagExpenseSelect');
+  const input=document.getElementById('mq2TagInput');
+  if(!sel||!input) return;
+  const x=(d.expenses||[]).find(e=>String(e.id)===String(sel.value));
+  input.value = x&&Array.isArray(x.tags) ? x.tags.join(', ') : '';
+}
+function mq2SaveExpenseTags(){
+  const sel=document.getElementById('mq2TagExpenseSelect');
+  const input=document.getElementById('mq2TagInput');
+  if(!sel||!input) return;
+  const x=(d.expenses||[]).find(e=>String(e.id)===String(sel.value));
+  if(!x){ alert('Pick an expense first'); return; }
+  x.tags=(input.value||'').split(',').map(t=>t.trim()).filter(Boolean);
+  save();
+  mq2RenderTagFilterRow();
+  mq2RenderTaggedList();
+}
+function mq2RenderTagFilterRow(){
+  const el=document.getElementById('mq2TagFilterRow');
+  if(!el) return;
+  const tags=mq2AllTags();
+  const chips=['All'].concat(tags);
+  el.innerHTML = chips.map(t=>'<button type="button" onclick="mq2SetTagFilter(\''+t.replace(/'/g,"\\'")+'\')" style="margin:2px 6px 2px 0;padding:5px 10px;border-radius:14px;border:1px solid rgba(120,100,160,.25);background:'+(t===mq2ActiveTagFilter?'var(--accent,#7c5cff)':'transparent')+';color:'+(t===mq2ActiveTagFilter?'#fff':'inherit')+';font-size:12px">'+mq2esc(t)+'</button>').join('');
+}
+function mq2SetTagFilter(t){
+  mq2ActiveTagFilter=t;
+  mq2RenderTagFilterRow();
+  mq2RenderTaggedList();
+}
+function mq2RenderTaggedList(){
+  const el=document.getElementById('mq2TaggedList');
+  if(!el) return;
+  let arr=(d.expenses||[]).filter(x=>Array.isArray(x.tags)&&x.tags.length);
+  if(mq2ActiveTagFilter!=='All') arr=arr.filter(x=>x.tags.includes(mq2ActiveTagFilter));
+  arr=arr.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+  el.innerHTML = arr.length ? arr.slice(0,30).map(x=>
+    '<div class="row"><div><b>'+mq2esc(x.title)+'</b><div class="muted">'+mq2esc(x.date||'')+' \u2022 '+(x.tags||[]).map(t=>'#'+mq2esc(t)).join(' ')+'</div></div><div class="amount">'+money(x.amount)+'</div></div>'
+  ).join('') : '<div class="muted">No tagged expenses yet.</div>';
+}
+window.mq2SaveExpenseTags=mq2SaveExpenseTags;
+window.mq2SetTagFilter=mq2SetTagFilter;
+
+// ================= 4) CHARTS (pie by category + 6-month income vs expense trend) =================
+function mq2BuildPie(){
+  const wrap=document.getElementById('mq2PieChart');
+  const legend=document.getElementById('mq2PieLegend');
+  if(!wrap||!legend) return;
+  const month=mq2cm();
+  const cats={};
+  (d.expenses||[]).filter(x=>(x.date||'').startsWith(month)).forEach(x=>{
+    const c=x.category||'Other';
+    cats[c]=(cats[c]||0)+(Number(x.amount)||0);
+  });
+  const entries=Object.entries(cats).sort((a,b)=>b[1]-a[1]);
+  const total=entries.reduce((s,e)=>s+e[1],0);
+  if(!total){
+    wrap.style.background='rgba(120,100,160,.12)';
+    legend.innerHTML='<div class="muted">No expenses this month yet.</div>';
+    return;
+  }
+  const colors=['#7c5cff','#16a34a','#e11d48','#f59e0b','#0ea5e9','#a855f7','#14b8a6','#f43f5e','#84cc16','#6366f1'];
+  let acc=0, stops=[];
+  entries.forEach((e,i)=>{
+    const pct=e[1]/total*100;
+    const start=acc, end=acc+pct;
+    stops.push(colors[i%colors.length]+' '+start.toFixed(2)+'% '+end.toFixed(2)+'%');
+    acc=end;
+  });
+  wrap.style.background='conic-gradient('+stops.join(',')+')';
+  legend.innerHTML = entries.map((e,i)=>
+    '<div style="display:flex;align-items:center;gap:8px;margin:4px 0;font-size:13px">'+
+    '<span style="width:10px;height:10px;border-radius:3px;background:'+colors[i%colors.length]+';display:inline-block"></span>'+
+    '<span style="flex:1">'+mq2esc(e[0])+'</span><b>'+money(e[1])+'</b> <span class="muted">('+Math.round(e[1]/total*100)+'%)</span></div>'
+  ).join('');
+}
+function mq2BuildTrend(){
+  const el=document.getElementById('mq2TrendChart');
+  if(!el) return;
+  const months=[];
+  const now=new Date();
+  for(let i=5;i>=0;i--){
+    const dt=new Date(now.getFullYear(), now.getMonth()-i, 1);
+    months.push(dt.toISOString().slice(0,7));
+  }
+  const inc=months.map(m=>(d.salary||[]).filter(x=>x.month===m).reduce((s,x)=>s+(Number(x.amount)||0),0));
+  const exp=months.map(m=>(d.expenses||[]).filter(x=>(x.date||'').startsWith(m)).reduce((s,x)=>s+(Number(x.amount)||0),0));
+  const max=Math.max(1,...inc,...exp);
+  const W=Math.max(300, months.length*90), H=180, bw=26, gap=90;
+  let bars='';
+  months.forEach((m,i)=>{
+    const x0=20+i*gap;
+    const hIn=inc[i]/max*130, hEx=exp[i]/max*130;
+    bars += '<rect x="'+x0+'" y="'+(150-hIn)+'" width="'+bw+'" height="'+hIn+'" rx="3" fill="#16a34a"></rect>';
+    bars += '<rect x="'+(x0+bw+4)+'" y="'+(150-hEx)+'" width="'+bw+'" height="'+hEx+'" rx="3" fill="#e11d48"></rect>';
+    const label=new Date(m+'-01').toLocaleString('en-IN',{month:'short'});
+    bars += '<text x="'+(x0+bw)+'" y="168" font-size="11" fill="currentColor" text-anchor="middle" opacity="0.7">'+label+'</text>';
+  });
+  el.innerHTML = '<svg viewBox="0 0 '+W+' 180" style="width:100%;height:180px;color:inherit"><g>'+bars+'</g></svg>'+
+    '<div style="display:flex;gap:16px;justify-content:center;margin-top:6px;font-size:12px">'+
+    '<span><span style="display:inline-block;width:10px;height:10px;background:#16a34a;border-radius:3px;margin-right:5px"></span>Income</span>'+
+    '<span><span style="display:inline-block;width:10px;height:10px;background:#e11d48;border-radius:3px;margin-right:5px"></span>Expense</span></div>';
+}
+function mq2RenderCharts(){ mq2BuildPie(); mq2BuildTrend(); }
+window.mq2RenderCharts=mq2RenderCharts;
+
+// ================= 5) PDF EXPORT (Reports page) =================
+let mq2JsPdfLoading=null;
+function mq2LoadJsPdf(){
+  if(window.jspdf && window.jspdf.jsPDF) return Promise.resolve();
+  if(mq2JsPdfLoading) return mq2JsPdfLoading;
+  mq2JsPdfLoading = new Promise((resolve,reject)=>{
+    const sc=document.createElement('script');
+    sc.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    sc.onload=()=>resolve();
+    sc.onerror=()=>reject(new Error('Could not load PDF library'));
+    document.head.appendChild(sc);
+  });
+  return mq2JsPdfLoading;
+}
+function mq2DownloadMonthlyPdf(){
+  const monInput=document.getElementById('monthlyMonth');
+  const mon=(monInput&&monInput.value)||mq2cm();
+  mq2LoadJsPdf().then(()=>{
+    const JsPDFCtor=window.jspdf.jsPDF;
+    const doc=new JsPDFCtor();
+    let y=15;
+    doc.setFontSize(16); doc.text('MithraQ Monthly Report - '+mon,14,y); y+=10;
+    doc.setFontSize(11);
+    const exp=(d.expenses||[]).filter(x=>(x.date||'').startsWith(mon));
+    const sal=(d.salary||[]).filter(x=>x.month===mon);
+    const emi=(d.emi||[]).filter(x=>x.due&&x.due.slice(0,7)===mon);
+    const totExp=exp.reduce((s,x)=>s+(Number(x.amount)||0),0);
+    const totSal=sal.reduce((s,x)=>s+(Number(x.amount)||0),0);
+    const totEmi=emi.reduce((s,x)=>s+(Number(x.amount)||0),0);
+    doc.text('Total Income: '+money(totSal),14,y); y+=7;
+    doc.text('Total Expenses: '+money(totExp),14,y); y+=7;
+    doc.text('Total EMI: '+money(totEmi),14,y); y+=7;
+    doc.text('Net: '+money(totSal-totExp-totEmi),14,y); y+=12;
+    doc.setFontSize(13); doc.text('Expenses',14,y); y+=7; doc.setFontSize(10);
+    if(!exp.length){ doc.text('No expenses recorded.',14,y); y+=6; }
+    exp.forEach(x=>{
+      if(y>280){ doc.addPage(); y=15; }
+      doc.text((x.date||'')+'  '+ (x.title||'') +'  ['+(x.category||'Other')+']  '+money(x.amount),14,y);
+      y+=6;
+    });
+    y+=6; if(y>270){ doc.addPage(); y=15; }
+    doc.setFontSize(13); doc.text('Salary',14,y); y+=7; doc.setFontSize(10);
+    if(!sal.length){ doc.text('No salary recorded.',14,y); y+=6; }
+    sal.forEach(x=>{ if(y>280){ doc.addPage(); y=15; } doc.text((x.month||'')+'  '+(x.note||'Salary')+'  '+money(x.amount),14,y); y+=6; });
+    doc.save('mithra-monthly-report-'+mon+'.pdf');
+  }).catch(err=>{ alert('Could not create PDF: '+err.message); });
+}
+window.mq2DownloadMonthlyPdf=mq2DownloadMonthlyPdf;
+
+// ================= DOM injection on load =================
+function mq2AddNavButton(page,label,icon,groupTitle){
+  const nav=document.querySelector('nav');
+  if(!nav) return;
+  const groups=Array.from(nav.querySelectorAll('.nav-group'));
+  let group=groups.find(g=>{ const t=g.querySelector('.nav-group-title'); return t && t.textContent.trim()===groupTitle; });
+  if(!group){
+    group=document.createElement('div');
+    group.className='nav-group';
+    const title=document.createElement('div');
+    title.className='nav-group-title';
+    title.textContent=groupTitle;
+    group.appendChild(title);
+    nav.appendChild(group);
+  }
+  const btn=document.createElement('button');
+  btn.dataset.page=page;
+  btn.innerHTML=icon+' <span>'+label+'</span>';
+  btn.onclick=function(){ go(page); };
+  group.appendChild(btn);
+}
+function mq2AddSection(id, html){
+  const main=document.querySelector('main.main');
+  if(!main || document.getElementById(id)) return;
+  const sec=document.createElement('section');
+  sec.className='page';
+  sec.id=id;
+  sec.innerHTML=html;
+  main.appendChild(sec);
+}
+
+function mq2Init(){
+  // Recurring page
+  mq2AddNavButton('recurring','Recurring','\ud83d\udd01','\ud83c\udfaf Planning');
+  mq2AddSection('recurring',
+    '<div class="title"><div><small>AUTOMATE</small><h2>Recurring Expenses</h2></div><button class="add" type="button" onclick="mq2OpenRecurringForm()">+ Add</button></div>'+
+    '<div id="mq2RecurringForm" class="card" style="display:none">'+
+      '<div class="settings-fields">'+
+      '<label>Name<input id="mq2RecTitle" placeholder="e.g. Rent"></label>'+
+      '<label>Amount<input id="mq2RecAmount" type="number" placeholder="e.g. 12000"></label>'+
+      '<label>Category<input id="mq2RecCategory" placeholder="e.g. Housing"></label>'+
+      '<label>Day of month<input id="mq2RecDay" type="number" min="1" max="28" placeholder="1-28"></label>'+
+      '</div>'+
+      '<button class="settings-action settings-primary-action" type="button" onclick="mq2SaveRecurring()"><b>\ud83d\udcbe Save Recurring Item</b><small>Auto-added to expenses every month</small></button>'+
+    '</div>'+
+    '<div id="mq2RecurringList"></div>'
+  );
+
+  // Charts page
+  mq2AddNavButton('charts','Charts','\ud83d\udcca','\ud83d\udcca Insights');
+  mq2AddSection('charts',
+    '<div class="title"><div><small>VISUAL INSIGHTS</small><h2>Charts</h2></div></div>'+
+    '<div class="card"><h3 style="margin:0 0 12px">This Month by Category</h3>'+
+    '<div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">'+
+    '<div id="mq2PieChart" style="width:150px;height:150px;border-radius:50%;flex-shrink:0"></div>'+
+    '<div id="mq2PieLegend" style="flex:1;min-width:180px"></div>'+
+    '</div></div>'+
+    '<div class="card" style="margin-top:14px"><h3 style="margin:0 0 12px">Income vs Expense (Last 6 Months)</h3>'+
+    '<div id="mq2TrendChart"></div></div>'
+  );
+
+  // Category budgets card in Budget page
+  const budgetSection=document.getElementById('budget');
+  if(budgetSection && !document.getElementById('mq2CategoryBudgetList')){
+    const card=document.createElement('div');
+    card.className='settings-wrap';
+    card.style.marginTop='16px';
+    card.innerHTML =
+      '<div class="settings-card">'+
+      '<div class="settings-section-title">\ud83c\udfaf <div><b>Category Budgets</b><small>Set a monthly limit for each spending category</small></div></div>'+
+      '<div class="settings-fields">'+
+      '<label>Category<input id="mq2CatBudgetName" placeholder="e.g. Food"></label>'+
+      '<label>Monthly Limit<input id="mq2CatBudgetAmount" type="number" placeholder="e.g. 6000"></label>'+
+      '</div>'+
+      '<button class="settings-action settings-primary-action" type="button" onclick="mq2SaveCategoryBudget()"><b>\ud83d\udcbe Save Limit</b><small>Add or update a category budget</small></button>'+
+      '<div id="mq2CategoryBudgetList" style="margin-top:14px"></div>'+
+      '</div>';
+    budgetSection.appendChild(card);
+  }
+
+  // Tags panel in Expenses page
+  const expensesSection=document.getElementById('expenses');
+  if(expensesSection && !document.getElementById('mq2TagExpenseSelect')){
+    const panel=document.createElement('div');
+    panel.className='card';
+    panel.style.margin='14px 0';
+    panel.innerHTML =
+      '<div class="settings-section-title">\ud83c\udff7\ufe0f <div><b>Tags</b><small>Tag an expense, then filter by tag</small></div></div>'+
+      '<div class="settings-fields">'+
+      '<label>Expense<select id="mq2TagExpenseSelect"></select></label>'+
+      '<label>Tags (comma separated)<input id="mq2TagInput" placeholder="e.g. urgent, family"></label>'+
+      '</div>'+
+      '<button class="settings-action" type="button" onclick="mq2SaveExpenseTags()"><b>Save Tags</b></button>'+
+      '<div id="mq2TagFilterRow" style="margin-top:12px"></div>'+
+      '<div id="mq2TaggedList" style="margin-top:6px"></div>';
+    const titleDiv=expensesSection.querySelector('.title');
+    if(titleDiv && titleDiv.nextSibling) titleDiv.parentNode.insertBefore(panel, titleDiv.nextSibling);
+    else expensesSection.insertBefore(panel, expensesSection.firstChild);
+    mq2PopulateTagSelect();
+    mq2RenderTagFilterRow();
+    mq2RenderTaggedList();
+  }
+
+  // PDF export button in Reports page
+  const reportGrid=document.querySelector('.reportgrid');
+  if(reportGrid && !document.getElementById('mq2PdfBtn')){
+    const btn=document.createElement('button');
+    btn.className='report';
+    btn.id='mq2PdfBtn';
+    btn.type='button';
+    btn.onclick=mq2DownloadMonthlyPdf;
+    btn.innerHTML='\ud83e\uddfe <b>Monthly Report PDF</b><small>Download as PDF document</small>';
+    reportGrid.appendChild(btn);
+  }
+
+  mq2RenderRecurring();
+  mq2RenderCategoryBudgets();
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', mq2Init);
+}else{
+  mq2Init();
+}
+
+// hook page navigation to refresh new sections (chain any existing window.go)
+const mq2OldGo=window.go;
+window.go=function(p, fromHistory){
+  const r = mq2OldGo ? mq2OldGo(p, fromHistory) : undefined;
+  if(p==='recurring') mq2RenderRecurring();
+  if(p==='budget') mq2RenderCategoryBudgets();
+  if(p==='charts') mq2RenderCharts();
+  if(p==='expenses'){ mq2PopulateTagSelect(); mq2RenderTagFilterRow(); mq2RenderTaggedList(); }
+  return r;
+};
+
+}catch(e){ console.error('MithraQ additive features error:', e); }
+})();
+
+</script>
 </body></html>
