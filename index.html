@@ -4122,9 +4122,9 @@ async function personalFileShare(id,idx){
     }else if(navigator.share){
       await navigator.share({title:x.name||f.name||"Document",text:"Sharing document: "+(x.name||f.name||"Document")});
     }else{
-      alert("Sharing isn't supported on this device. Please use Download instead.");
+      personalFileDownloadFile(f,x.name);
     }
-  }catch(e){if(e && e.name!=="AbortError")alert("Unable to share this document. Please use Download instead.")}
+  }catch(e){if(e && e.name!=="AbortError")personalFileDownloadFile(f,x.name)}
 }
 function personalFileRename(id){
   const x=(d.personalFiles||[]).find(a=>a.id===id);if(!x)return;
