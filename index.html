@@ -3113,6 +3113,9 @@ function roomRentEditBill(id){
   $("#rrGroupSelect").value=String(r.groupId);
   $("#rrBillAmount").value=r.rentAmount!=null?r.rentAmount:(r.amount||0);$("#rrEBAmount").value=r.ebAmount||"";$("#rrBillDate").value=r.date||rrToday();$("#rrBillType").value=r.type||"Combined";
   roomRentRenderSelectedMembers();
+  document.querySelectorAll('.rr-detail-card').forEach(el=>el.classList.add('rr-detail-hidden'));
+  document.querySelector('.rr-bill-detail')?.classList.remove('rr-detail-hidden');
+  document.getElementById('rrBillBody')?.classList.remove('rr-main-hidden');
   document.getElementById("rrBillCard")?.scrollIntoView({behavior:"smooth",block:"start"});
 }
 function roomRentDeleteBill(id){
@@ -3394,6 +3397,9 @@ function roomRentCreateNextMonth(){
   dt.setMonth(dt.getMonth()+1);
   $("#rrBillDate").value=`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
   roomRentRenderSelectedMembers();
+  document.querySelectorAll('.rr-detail-card').forEach(el=>el.classList.add('rr-detail-hidden'));
+  document.querySelector('.rr-bill-detail')?.classList.remove('rr-detail-hidden');
+  document.getElementById('rrBillBody')?.classList.remove('rr-main-hidden');
   document.getElementById("rrBillCard")?.scrollIntoView({behavior:"smooth",block:"start"});
 }
 function roomRentRenderSummary(){
