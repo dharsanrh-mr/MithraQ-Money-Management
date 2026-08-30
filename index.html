@@ -5203,7 +5203,26 @@ function bufToB64u(buf){ const bytes=new Uint8Array(buf); let bin=''; for(let i=
 function b64uToBuf(b64u){ const pad='='.repeat((4-b64u.length%4)%4); const b64=(b64u+pad).replace(/-/g,'+').replace(/_/g,'/'); const bin=atob(b64); const buf=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i); return buf.buffer; }
 function randomBytes(len){ const a=new Uint8Array(len); if(window.crypto&&crypto.getRandomValues) crypto.getRandomValues(a); else for(let i=0;i<len;i++) a[i]=Math.floor(Math.random()*256); return a; }
 function biometricSupported(){ return !!(window.PublicKeyCredential && navigator.credentials && navigator.credentials.create && navigator.credentials.get); }
-async function biometricPlatformAvailable(){ try{ if(!biometricSupported()) return false; return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable(); }catch(e){ return false; } }
+function nativeBioBridge(){ return (window.AndroidBiometric && typeof window.AndroidBiometric.authenticate==='function') ? window.AndroidBiometric : null; }
+let pendingBioResolve=null;
+window.__mqBiometricResult=function(ok){ if(pendingBioResolve){ const r=pendingBioResolve; pendingBioResolve=null; r(!!ok); } };
+function nativeAuthenticate(){
+  const bridge=nativeBioBridge();
+  return new Promise(function(resolve){
+    if(!bridge){ resolve(false); return; }
+    pendingBioResolve=resolve;
+    try{ bridge.authenticate(); }catch(e){ pendingBioResolve=null; resolve(false); }
+    setTimeout(function(){ if(pendingBioResolve){ const r=pendingBioResolve; pendingBioResolve=null; r(false); } },30000);
+  });
+}
+async function biometricPlatformAvailable(){
+  try{
+    const bridge=nativeBioBridge();
+    if(bridge){ return typeof bridge.isAvailable==='function' ? !!bridge.isAvailable() : true; }
+    if(!biometricSupported()) return false;
+    return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+  }catch(e){ return false; }
+}
 let bioSupportChecked=false;
 async function checkBioSupport(){
   const ok=await biometricPlatformAvailable();
@@ -5364,6 +5383,21 @@ window.appLockBiometricToggle=async function(){
     if(typeof backupNotice==='function') backupNotice('Not Available','Biometric unlock isn\'t available on this device or browser.','⚠️');
     return;
   }
+  const bridge=nativeBioBridge();
+  if(bridge){
+    try{
+      const ok=await nativeAuthenticate();
+      if(!ok) throw new Error('native auth failed');
+      d.appLockBiometricCredId='native';
+      d.appLockBiometricEnabled=true;
+      persist();
+      if(typeof backupNotice==='function') backupNotice('Biometric Unlock On','You can now unlock with fingerprint or Face ID.','🧬');
+    }catch(err){
+      if(typeof backupNotice==='function') backupNotice('Couldn\'t Enable','Biometric setup was cancelled or failed.','⚠️');
+    }
+    updateSettingsUI();
+    return;
+  }
   try{
     const brand=(typeof d!=='undefined'&&d.brandName)?d.brandName:'MithraQ';
     const cred=await navigator.credentials.create({publicKey:{
@@ -5388,6 +5422,14 @@ window.appLockBiometricToggle=async function(){
 window.appLockTryBiometric=async function(){
   if(!ensureData()) return;
   if(!d.appLockBiometricEnabled || !d.appLockBiometricCredId) return;
+  const bridge=nativeBioBridge();
+  if(bridge){
+    try{
+      const ok=await nativeAuthenticate();
+      if(ok){ hideLockScreen(); pinBuffer=''; }
+    }catch(e){ /* cancelled or failed - stay on PIN screen */ }
+    return;
+  }
   try{
     const assertion=await navigator.credentials.get({publicKey:{
       challenge:randomBytes(32),
