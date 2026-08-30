@@ -2054,6 +2054,26 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
   </div>
 
   <div class="settings-card">
+    <div class="settings-section-title">📁 <div><b>Storage Location</b><small>Choose where downloaded files are saved</small></div></div>
+    <div class="settings-privacy" role="button" tabindex="0" onclick="chooseStorageLocation()" onkeydown="if(event.key==='Enter'||event.key===' ')chooseStorageLocation()" aria-label="Choose download storage location">
+      <div class="settings-privacy-icon">📂</div>
+      <div>
+        <b>Save downloads to</b>
+        <p id="storageLocationLabel">Default (Downloads folder)</p>
+      </div>
+    </div>
+    <div class="settings-action-grid">
+      <button class="settings-action settings-primary-action" type="button" onclick="chooseStorageLocation()">
+        <b>📂 Choose Folder</b><small>Pick where files, images, PDFs & CVs are saved</small>
+      </button>
+      <button class="settings-action" type="button" onclick="resetStorageLocation()">
+        <b>↩️ Use Default</b><small>Reset to the Downloads folder</small>
+      </button>
+    </div>
+    <div class="settings-note">Applies to files, images, PDFs, receipts and CVs you download from MithraQ. In the mobile app this uses your device's folder picker; on the website it depends on your browser's download settings.</div>
+  </div>
+
+  <div class="settings-card">
     <div class="settings-section-title">🎨 <div><b>Branding</b><small>Change your headline</small></div></div>
     <div class="settings-fields">
       <label>Headline
@@ -4528,6 +4548,41 @@ function showPrivacyStatus(){
     backupNotice("Storage Check","This browser did not allow Local Storage to be checked. Your existing app data was not changed.","!");
   }
 }
+const STORAGE_LOCATION_KEY="mq_storage_location_label";
+function renderStorageLocation(){
+  const label=localStorage.getItem(STORAGE_LOCATION_KEY)||"Default (Downloads folder)";
+  const el=document.getElementById("storageLocationLabel");
+  if(el)el.textContent=label;
+}
+function chooseStorageLocation(){
+  if(window.AndroidStorage&&window.AndroidStorage.chooseDownloadFolder){
+    window.AndroidStorage.chooseDownloadFolder();
+    return;
+  }
+  if(window.showDirectoryPicker){
+    window.showDirectoryPicker().then(handle=>{
+      localStorage.setItem(STORAGE_LOCATION_KEY,handle.name);
+      renderStorageLocation();
+      backupNotice("Storage Location","New downloads will be saved to \""+handle.name+"\" when your browser supports it.","📂");
+    }).catch(()=>{});
+    return;
+  }
+  backupNotice("Storage Location","Choosing a custom save folder is available in the MithraQ app, or in desktop browsers that support it. On this browser, downloads go to your default Downloads folder — you can check or change that in your browser's own download settings.","📂");
+}
+function resetStorageLocation(){
+  if(window.AndroidStorage&&window.AndroidStorage.clearDownloadFolder){
+    window.AndroidStorage.clearDownloadFolder();
+  }
+  localStorage.removeItem(STORAGE_LOCATION_KEY);
+  renderStorageLocation();
+}
+window.onStorageLocationSelected=function(label){
+  if(label)localStorage.setItem(STORAGE_LOCATION_KEY,label);
+  else localStorage.removeItem(STORAGE_LOCATION_KEY);
+  renderStorageLocation();
+};
+document.addEventListener('DOMContentLoaded',renderStorageLocation);
+
 function markBackupSaved(){
   d.lastBackupAt=new Date().toISOString();
   mqPersist();
