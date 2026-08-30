@@ -1035,17 +1035,21 @@ nav button:nth-child(n+6){display:block}
 .rr-room-tab{flex:0 0 auto;border:0;border-radius:999px;padding:8px 14px;background:#f3efff;color:#6d28d9;font-weight:800;font-size:12px;white-space:nowrap}
 .rr-room-tab.active{background:linear-gradient(135deg,#6d28d9,#ec4899);color:#fff}
 .rr-balance-list{display:grid;gap:9px}
-.rr-balance-item{background:#faf8ff;border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid #eee7fa}
+.rr-balance-item{background:#faf8ff;border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;border:1px solid #eee7fa}
+.rr-balance-item>div:first-child{flex:1;min-width:0}
 .rr-balance-item.overdue{background:#fff1f2;border-color:#fecdd3}
-.rr-balance-item b{display:block;font-size:14px}
-.rr-balance-item small{display:block;color:#9295a7;margin-top:2px}
+.rr-balance-item b{display:block;font-size:14px;overflow-wrap:anywhere}
+.rr-balance-item small{display:block;color:#9295a7;margin-top:2px;overflow-wrap:anywhere}
 .rr-balance-item .rr-overdue-tag{color:#e11d48;font-weight:800}
-.rr-balance-right{text-align:right}
-.rr-balance-right b{color:#166534;font-size:15px;display:block}
-.rr-balance-right small{color:#c2410c;display:block;margin-top:2px}
+.rr-balance-right{text-align:right;flex:0 0 auto;max-width:42%}
+.rr-balance-right b{color:#166534;font-size:15px;display:block;white-space:nowrap}
+.rr-balance-right small{color:#c2410c;display:block;margin-top:2px;white-space:nowrap}
 .rr-insights-block{margin-top:14px}
 .rr-yearly-list{display:grid;gap:9px;margin-top:8px}
-.rr-yearly-item{background:#faf8ff;border-radius:14px;padding:12px;display:flex;justify-content:space-between;gap:8px}
+.rr-yearly-item{background:#faf8ff;border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rr-yearly-item>div:first-child{flex:1;min-width:0}
+.rr-yearly-item b{overflow-wrap:anywhere}
+.rr-yearly-item small{overflow-wrap:anywhere}
 .rr-yearly-item b{font-size:14px}
 .rr-yearly-item small{display:block;color:#9295a7}
 .rr-upi-btn{background:#e0f2fe;color:#075985}
@@ -1055,7 +1059,11 @@ nav button:nth-child(n+6){display:block}
 .dark .rr-balance-item.overdue{background:#3a1c22;border-color:#5c2530}
 .dark .rr-yearly-item{background:#22243a}
 .dark .rr-room-tab{background:#22243a;color:#c4b5fd}
-@media(max-width:560px){.rr-quick-access.rr-quick-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.rr-quick-access.rr-quick-4{grid-template-columns:repeat(2,1fr)}
+  .rr-balance-item,.rr-yearly-item{flex-direction:column;align-items:stretch}
+  .rr-balance-right{text-align:left;max-width:100%}
+  .rr-balance-right b,.rr-balance-right small{white-space:normal}
+}
 </style>
 
 
