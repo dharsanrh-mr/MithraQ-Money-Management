@@ -372,6 +372,7 @@ nav button:nth-child(n+6){display:block}
   box-shadow:0 6px 18px rgba(225,29,72,.07);
 }
 .edit:active,.goal-edit:active,.del:active,.goal-delete:active{transform:scale(.985)}
+  .loan-pending-amount{display:block;font-size:11px;color:#b45309;font-weight:800;margin-top:2px}
 </style>
 <style id="goal-saving-modal-only">
 .goal-saving-modal{width:min(430px,100%);background:#fff;border-radius:22px;padding:22px;display:grid;gap:12px;position:relative;box-shadow:0 25px 70px #0004}.goal-saving-modal h3{margin:0;font-size:22px}.goal-saving-modal p{margin:0;color:#9295a7;font-size:13px}.goal-saving-modal input{width:100%;padding:14px 15px;border:1px solid #e4deed;border-radius:12px;background:#fff;color:#20233a;font-size:17px;outline:none}.goal-saving-modal input:focus{border-color:#7c3aed;box-shadow:0 0 0 3px #7c3aed18}.goal-saving-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}.goal-saving-cancel,.goal-saving-add{border:0;border-radius:11px;padding:13px;font-weight:800;font-size:15px}.goal-saving-cancel{background:#f3efff;color:#6d28d9}.goal-saving-add{color:#fff;background:linear-gradient(135deg,#6d28d9,#ec4899)}.dark .goal-saving-modal{background:#181a2b;color:#eee}.dark .goal-saving-modal input{background:#22243a;color:#fff;border-color:#393c55}
@@ -3677,6 +3678,7 @@ function loanItemHtml(x,isGiven){
       <div class="loan-row-right">
         <span class="loan-top-status ${status}">${statusLabel}</span>
         <strong>${money(total)}</strong>
+        <small class="loan-pending-amount">Pending: ${money(remaining)}</small>
         <span class="loan-row-arrow" id="loan-item-arrow-${x.id}">⌄</span>
       </div>
     </button>
@@ -3694,6 +3696,7 @@ function loanItemHtml(x,isGiven){
         <div><small>Total Amount</small><b>${money(total)}</b></div>
         <div><small>${label} Amount</small><b>${money(paid)}</b></div>
         <div><small>Remaining Amount</small><b>${money(remaining)}</b></div>
+        <div><small>Pending Amount</small><b>${money(remaining)}</b></div>
         <div><small>Progress</small><b>${progress}%</b></div>
       </div>
 
@@ -3752,7 +3755,7 @@ $("#loanSummary").innerHTML=`
   <div class="loan-smart-summary">
     <div class="loan-smart-card"><small>Total Borrowed</small><b>${money(loanAllTaken.total)}</b><span>${loanAllTaken.items.length} loan${loanAllTaken.items.length===1?'':'s'}</span></div>
     <div class="loan-smart-card"><small>Total Given</small><b>${money(loanAllGiven.total)}</b><span>${loanAllGiven.items.length} loan${loanAllGiven.items.length===1?'':'s'}</span></div>
-    <div class="loan-smart-card"><small>Outstanding</small><b>${money(loanAllTaken.remaining)}</b><span>to repay</span></div>
+    <div class="loan-smart-card"><small>Pending Amount</small><b>${money(loanAllTaken.remaining)}</b><span>to repay</span></div>
   </div>`;
 $("#loanList").innerHTML=`
   <section class="loan-type-section loan-taken-section loan-collapsed" id="loanTakenSection">
@@ -4992,4 +4995,56 @@ window.go=function(p, fromHistory){
 })();
 
 </script>
+
+<!-- Loan display reliability fix: only Loan page -->
+<style id="loan-open-reliability-fix">
+#loanList .loan-type-section{display:block!important;visibility:visible!important;opacity:1!important}
+#loanList .loan-section-body{display:block!important}
+#loanList .loan-type-header{display:flex!important}
+</style>
+<script id="loan-open-reliability-script">
+(function(){
+  function renderLoanPageReliably(){
+    try{
+      var summary=document.getElementById('loanSummary');
+      var list=document.getElementById('loanList');
+      if(!summary||!list||typeof d==='undefined'||!Array.isArray(d.loan)) return;
+      var taken=d.loan.filter(function(x){return (x.category||'')==='Loan Taken'});
+      var given=d.loan.filter(function(x){return (x.category||'')==='Loan Given'});
+      function stats(items){
+        var total=items.reduce(function(a,x){return a+Math.max(0,Number(x.amount)||0)},0);
+        var paid=items.reduce(function(a,x){var t=Math.max(0,Number(x.amount)||0);return a+Math.max(0,Math.min(t,Number(x.paid)||0))},0);
+        var remaining=Math.max(0,total-paid);
+        return {total:total,paid:paid,remaining:remaining,completed:items.filter(function(x){var t=Math.max(0,Number(x.amount)||0);return Math.max(0,Math.min(t,Number(x.paid)||0))>=t}).length};
+      }
+      var ts=stats(taken), gs=stats(given);
+      summary.innerHTML='<div class="loan-smart-summary">'
+        +'<div class="loan-smart-card"><small>Total Borrowed</small><b>'+money(ts.total)+'</b><span>'+taken.length+' loan'+(taken.length===1?'':'s')+'</span></div>'
+        +'<div class="loan-smart-card"><small>Total Given</small><b>'+money(gs.total)+'</b><span>'+given.length+' loan'+(given.length===1?'':'s')+'</span></div>'
+        +'<div class="loan-smart-card"><small>Pending Amount</small><b>'+money(ts.remaining)+'</b><span>to repay</span></div>'
+        +'</div>';
+      list.innerHTML=''
+        +'<section class="loan-type-section loan-taken-section" id="loanTakenSection">'
+        +'<div class="loan-type-header loan-section-toggle" role="button" tabindex="0" aria-expanded="true">'
+        +'<div class="loan-type-icon loan-taken-icon">💳</div><div><small>LOAN TAKEN</small></div><b>'+taken.length+'</b><span class="loan-section-arrow">⌃</span></div>'
+        +'<div class="loan-section-body"><div class="loan-list-title"><span>📋 Loan Taken List</span><small>Tap a loan to view details</small></div><div class="loan-type-list">'+(taken.length?taken.map(function(x){return loanItemHtml(x,false)}).join(''):'<div class="loan-empty">No Loan Taken records yet.</div>')+'</div></div></section>'
+        +'<section class="loan-type-section loan-given-section" id="loanGivenSection">'
+        +'<div class="loan-type-header loan-section-toggle" role="button" tabindex="0" aria-expanded="true">'
+        +'<div class="loan-type-icon loan-given-icon">🤝</div><div><small>LOAN GIVEN</small></div><b>'+given.length+'</b><span class="loan-section-arrow">⌃</span></div>'
+        +'<div class="loan-section-body"><div class="loan-list-title"><span>📋 Loan Given List</span><small>Tap a loan to view details</small></div><div class="loan-type-list">'+(given.length?given.map(function(x){return loanItemHtml(x,true)}).join(''):'<div class="loan-empty">No Loan Given records yet.</div>')+'</div></div></section>';
+      list.querySelectorAll('.loan-section-toggle').forEach(function(h){
+        h.addEventListener('click',function(){
+          var sec=h.closest('.loan-type-section'); var body=sec&&sec.querySelector('.loan-section-body'); var arrow=h.querySelector('.loan-section-arrow');
+          if(!sec||!body)return; var hidden=body.style.display==='none'; body.style.display=hidden?'block':'none'; if(arrow)arrow.textContent=hidden?'⌃':'⌄'; h.setAttribute('aria-expanded',hidden?'true':'false');
+        });
+      });
+    }catch(e){console.error('Loan display fix',e)}
+  }
+  window.renderLoanPageReliably=renderLoanPageReliably;
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(renderLoanPageReliably,200)});
+  setTimeout(renderLoanPageReliably,500);
+  setTimeout(renderLoanPageReliably,1200);
+})();
+</script>
+
 </body></html>
