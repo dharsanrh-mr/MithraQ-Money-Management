@@ -155,6 +155,20 @@ nav button:nth-child(n+6){display:block}
 .dark .chit-progress{background:#303247}.dark .chit-list-meta span{border-color:#393c55}.dark .chit-progress-status b{color:#fff}.dark .chit-status-summary{background:#303247;color:#cbd5e1}.dark .chit-status-summary.done{background:#183323;color:#bbf7d0}
 @media(max-width:600px){.chit-list-card{padding:16px}.chit-list-top{align-items:flex-start}.chit-list-main b{font-size:17px}.chit-progress-status{align-items:flex-start;flex-direction:column;gap:5px}}
 
+/* Chit extra features: due/overdue badge, payout status, remaining amount, sort, delete confirm */
+.chit-due-info{margin-top:12px;font-size:12px;font-weight:800;color:#166534;background:#f0fdf4;border-radius:11px;padding:9px 12px}
+.chit-due-info.overdue{color:#b91c1c;background:#fef2f2}
+.chit-payout-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;font-size:12px;color:#8c8fa0}
+.chit-payout-btn{border:0;border-radius:9px;padding:8px 11px;font-weight:800;background:#f3efff;color:#6d28d9}
+.chit-payout-btn.received{background:#dcfce7;color:#166534}
+.chit-sort-select{border:1px solid #e4deed;border-radius:11px;padding:9px 11px;background:#fff;color:#20233a;font-weight:700;font-size:12px;margin-right:8px}
+.dark .chit-due-info{background:#183323;color:#bbf7d0}
+.dark .chit-due-info.overdue{background:#3a1a1a;color:#fca5a5}
+.dark .chit-payout-btn{background:#22243a;color:#fff}
+.dark .chit-payout-btn.received{background:#183323;color:#bbf7d0}
+.dark .chit-sort-select{background:#22243a;color:#fff;border-color:#393c55}
+@media(max-width:600px){.title .chit-sort-select{margin:8px 0 0;width:100%}}
+
 .chit-list-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.chit-list-main b{font-size:18px}.chit-list-meta{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.chit-list-meta span{background:#faf8ff;border-radius:11px;padding:10px;color:#8c8fa0;font-size:12px}.chit-list-meta b{display:block;color:#24263a;font-size:14px;margin-top:3px}.chit-list-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.chit-view{border:0;border-radius:9px;padding:8px 11px;font-weight:800;background:#f3efff;color:#6d28d9}.chit-extra{margin-top:12px;border-top:1px solid #eee7f7;padding-top:12px}.chit-extra[hidden]{display:none}.dark .chit-list-card{background:#1d1f32}.dark .chit-list-meta span{background:#22243a}.dark .chit-list-meta b{color:#fff}.dark .chit-extra{border-top-color:#393c55}
 .expense-tools{margin:0 0 16px}.expense-summary{display:grid;grid-template-columns:1.25fr .75fr;gap:12px;margin-bottom:12px}.expense-summary-card{background:#fff;border-radius:20px;padding:15px 16px;box-shadow:0 8px 22px rgba(80,35,130,.06)}.expense-summary-card small{display:block;color:#888;font-size:12px;margin-bottom:4px}.expense-summary-card b{font-size:22px;color:#29283a}.expense-summary-card .sub{font-size:12px;color:#999;margin-top:3px}.expense-search{width:100%;box-sizing:border-box;border:1px solid rgba(150,120,180,.18);background:#fff;border-radius:15px;padding:13px 15px;font-size:14px;outline:none;margin-bottom:10px}.expense-filters{display:flex;gap:8px;overflow-x:auto;padding:1px 1px 5px;scrollbar-width:none}.expense-filters::-webkit-scrollbar{display:none}.expense-chip{border:0;background:#fff;color:#777;border-radius:999px;padding:8px 13px;font-size:12px;white-space:nowrap;box-shadow:0 5px 14px rgba(80,35,130,.05)}.expense-chip{cursor:pointer;touch-action:manipulation;pointer-events:auto;position:relative;z-index:2;-webkit-tap-highlight-color:transparent}.expense-chip.active{background:linear-gradient(135deg,#6535f0,#df249f);color:#fff}.expense-date-head{font-size:12px;font-weight:700;color:#8a7a97;letter-spacing:.7px;margin:16px 4px 8px}.expense-compact-item{background:#fff;border-radius:18px;padding:13px 14px;margin-bottom:9px;box-shadow:0 6px 18px rgba(80,35,130,.05)}.expense-compact-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.expense-compact-name{font-weight:700;font-size:15px;color:#29283a}.expense-compact-meta{font-size:11px;color:#999;margin-top:3px}.expense-compact-amount{font-size:16px;font-weight:700;color:#29283a;white-space:nowrap}.expense-actions{display:flex;gap:7px;margin-top:9px}.expense-actions button{border:0;border-radius:10px;padding:7px 11px;font-size:11px;font-weight:700}.expense-actions .edit{background:#eef8ff;color:#0877b9}.expense-actions .del{background:#fff0f4;color:#d4145a}.expense-empty{background:#fff;border-radius:18px;padding:25px;text-align:center;color:#999}.expense-filter-note{font-size:11px;color:#999;margin:7px 2px 0}
 .smart-finance-card{min-width:0}.smart-budget-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:4px 0 12px}.smart-budget-row small,.health-score-row small{display:block;color:#8b8da0;font-size:10px;font-weight:800}.smart-budget-row b{font-size:15px}.smart-progress{height:9px;background:#eee9f5;border-radius:999px;overflow:hidden}.smart-progress i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#7c3aed,#ec4899);transition:width .25s}.smart-alert-text{margin-top:10px;color:#777a8e;font-size:11px;font-weight:700;line-height:1.4}.score-pill{padding:5px 9px;border-radius:999px;background:#eaf8ef;color:#16a34a;font-size:10px;font-weight:900}.health-score-row{display:flex;align-items:baseline;gap:4px}.health-score-row>strong{font-size:30px}.health-score-row>div{margin-left:auto}@media(max-width:700px){.smart-budget-row{gap:7px}.health-score-row>div{margin-left:8px}}
@@ -1786,7 +1800,7 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
   </div>
 </section>
 
-<section class="page" id="chitfund"><div class="title"><div><small>MONTHLY CHIT COMMITMENTS</small><h2>Chit-wise List</h2></div><button class="add" onclick="openForm('chitfund')">Add</button></div><div id="chitReminder"></div><div class="chit-summary"><div><small>Total Chits</small><b id="chitCount">0</b></div><div><small>Monthly Payable</small><b id="chitMonthly">₹0</b></div><div><small>Total Months</small><b id="chitMonths">0</b></div><div><small>Total Paid</small><b id="chitPaid">₹0</b></div></div><div class="card" id="chitfundList"></div></section>
+<section class="page" id="chitfund"><div class="title"><div><small>MONTHLY CHIT COMMITMENTS</small><h2>Chit-wise List</h2></div><div style="display:flex;align-items:center;flex-wrap:wrap"><select id="chitSortSelect" class="chit-sort-select" onchange="renderChitfundList()"><option value="default">Sort: Default</option><option value="progress">Sort: Progress</option><option value="due">Sort: Due Date</option><option value="amount">Sort: Amount</option></select><button class="add" onclick="openForm('chitfund')">Add</button></div></div><div id="chitReminder"></div><div class="chit-summary"><div><small>Total Chits</small><b id="chitCount">0</b></div><div><small>Monthly Payable</small><b id="chitMonthly">₹0</b></div><div><small>Total Months</small><b id="chitMonths">0</b></div><div><small>Total Paid</small><b id="chitPaid">₹0</b></div></div><div class="card" id="chitfundList"></div></section>
 <section class="page" id="goal">
 <div class="title"><div><small>GOAL PLANNER</small><h2>Goals</h2></div><button class="add goal-toggle-btn" id="goalToggleBtn" type="button" onclick="toggleGoalForm()">+ Add Goal</button></div>
 <div class="card goal-add-card" id="goalAddCard" hidden>
@@ -1952,6 +1966,16 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
           <option value="daily">Daily Report</option><option value="monthly">Monthly Report</option>
         </select>
       </label>
+      <label>Language / மொழி
+        <select class="settings-select" id="appLanguage">
+          <option value="en">English</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="hi">हिंदी (Hindi)</option>
+        </select>
+      </label>
+      <button class="settings-action settings-primary-action" type="button" onclick="saveAppLanguage()"><b>💾 Save Language</b><small>Switch app language</small></button>
     </div>
   </div>
 
@@ -2037,7 +2061,7 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
 <div id="backupUiModal" class="backup-ui-overlay" aria-hidden="true"></div>
 <script>
 const KEY="mithra-final-data";
-const DEFAULT_DATA={expenses:[],salary:[],emi:[],loan:[],chitfund:[],goals:[],personalFiles:[],currency:"₹",theme:"light",reportDefault:"daily",brandLogo:"M",brandName:"MithraQ",dashboardIcon:"🏠",dashboardHeadline:"Dashboard"};
+const DEFAULT_DATA={expenses:[],salary:[],emi:[],loan:[],chitfund:[],goals:[],personalFiles:[],currency:"₹",theme:"light",reportDefault:"daily",brandLogo:"M",brandName:"MithraQ",dashboardIcon:"🏠",dashboardHeadline:"Dashboard",language:"en"};
 function mqReadWindowStore(){try{const raw=window.name||"";if(raw.startsWith("MITHRAQ_DATA:")){const parsed=JSON.parse(raw.slice(13));if(parsed&&typeof parsed==="object")return parsed}}catch(e){}return null}
 function mqReadPersistent(){let best=null;try{const raw=localStorage.getItem(KEY);if(raw){const x=JSON.parse(raw);if(x&&typeof x==="object")best=x}}catch(e){}
   if(!best){const x=mqReadWindowStore();if(x)best=x}
@@ -2487,6 +2511,45 @@ function chitCalc(x,r){
   const dividend=r.dividend!==''&&r.dividend!=null?Number(r.dividend)||0:discount;
   return Math.max(0,base-dividend);
 }
+function chitDueDateStr(rowDate,dueDay){
+  const [y,m]=String(rowDate).split('-').map(Number);
+  const day=Math.min(Number(dueDay)||5,new Date(y,m,0).getDate());
+  return new Date(y,m-1,day);
+}
+function chitTogglePayout(id){
+  const x=d.chitfund.find(a=>a.id===id);if(!x)return;
+  x.payoutTaken=!x.payoutTaken;
+  mqPersist();
+  render();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const card=document.getElementById('chit-card-'+id);
+    if(card) card.scrollIntoView({block:'nearest'});
+  }));
+}
+function chitDelete(id){
+  const x=d.chitfund.find(a=>a.id===id);if(!x)return;
+  roomRentShowConfirm('Delete "'+(x.name||'this chit')+'"? This cannot be undone.',()=>{
+    del('chitfund',id);
+  },'Delete Chit');
+}
+function renderChitfundList(){
+  const sortBy=document.getElementById('chitSortSelect')?.value||'default';
+  const arr=[...(Array.isArray(d.chitfund)?d.chitfund:[])];
+  arr.forEach(ensureChitSchedule);
+  if(sortBy==='progress'){
+    arr.sort((a,b)=>{
+      const pa=(Number(a.months)||0)?(a.schedule||[]).filter(r=>r.status==='paid').length/Number(a.months):0;
+      const pb=(Number(b.months)||0)?(b.schedule||[]).filter(r=>r.status==='paid').length/Number(b.months):0;
+      return pb-pa;
+    });
+  }else if(sortBy==='due'){
+    arr.sort((a,b)=>(Number(a.dueDay)||5)-(Number(b.dueDay)||5));
+  }else if(sortBy==='amount'){
+    arr.sort((a,b)=>(Number(b.value)||0)-(Number(a.value)||0));
+  }
+  const box=document.getElementById('chitfundList');
+  if(box) box.innerHTML=arr.length?arr.map(chitCard).join(''):'<div class="muted">No records yet.</div>';
+}
 function chitStatus(id,i){
   const x=d.chitfund.find(a=>a.id===id);if(!x)return;
   ensureChitSchedule(x);
@@ -2526,12 +2589,23 @@ function chitCard(x){
   const monthlyNow=fixed?(Number(x.monthlyAmount)||0):chitCalc(x,schedule.find(r=>r.status==='pending')||schedule[schedule.length-1]||{});
   const paid=paidRows.reduce((a,r)=>a+chitCalc(x,r),0),dividend=fixed?0:schedule.reduce((a,r)=>a+(Number(r.dividend)||0),0),auctionTaken=fixed?0:schedule.filter(r=>r.auctionTaken).length;
   const status=progress>=100?'Completed':paidMonths?'In Progress':'Not Started';
+  const remaining=Math.max(0,value-paid);
+  const nextRow=schedule.find(r=>r.status!=='paid');
+  let dueInfoHtml='';
+  if(nextRow){
+    const dueDate=chitDueDateStr(nextRow.date,x.dueDay||5);
+    const overdue=dueDate<new Date(new Date().toDateString());
+    dueInfoHtml=`<div class="chit-due-info ${overdue?'overdue':''}">${overdue?'⚠️ Payment overdue since ':'📅 Next payment: '}${dueDate.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}</div>`;
+  }
+  const payoutRowHtml=`<div class="chit-payout-row"><span>Payout Status</span><button type="button" class="chit-payout-btn ${x.payoutTaken?'received':''}" onclick="chitTogglePayout(${x.id})">${x.payoutTaken?'✅ Payout Received':'Mark Payout Received'}</button></div>`;
   return `<div class="chit-list-card" id="chit-card-${x.id}">
     <div class="chit-list-top"><div class="chit-list-main"><b>${esc(x.name)}${fixed?'<span class="chit-fixed-badge">FIXED MONTHLY</span>':''}</b><div class="muted">${esc(x.groupNo||'')} • ${count} chit${count===1?'':'s'} • ${months} months${fixed?' • Fixed amount':' • '+members+' members'}</div></div><div class="amount ${fixed?'chit-fixed-amount':''}">${money(monthlyNow)}/month</div></div>
     <div class="chit-list-meta"><span>Monthly Payable <b>${money(monthlyNow)}</b></span><span>${fixed?'Total Chit Value':'Chit Value'} <b>${money(value)}</b></span></div>
     <div class="chit-progress-wrap"><div class="chit-progress-head"><span>Payment Progress</span><b>${progress}%</b></div><div class="chit-progress"><div class="chit-progress-bar" style="width:${progress}%"></div></div><div class="chit-progress-status"><span>${paidMonths} of ${months} month${months===1?'':'s'} paid</span><span class="chit-status-summary ${status==='Completed'?'done':''}">${status}</span></div></div>
-    <div class="chit-list-actions"><button class="chit-view" onclick="toggleChitSection(${x.id},'details')">View Details</button><button class="chit-view" onclick="toggleChitSection(${x.id},'history')">Payment History</button><button class="edit" onclick="openForm('chitfund',${x.id})">Edit</button><button class="del" onclick="del('chitfund',${x.id})">Delete</button></div>
-    <div class="chit-extra chit-details" id="chit-details-${x.id}" hidden><div class="chit-master"><div><small>Chit Value</small><b>${money(value)}</b></div><div><small>Tenure</small><b>${months} Months</b></div><div><small>${fixed?'Plan':'Members'}</small><b>${fixed?'Fixed Monthly':members}</b></div><div><small>Due Date</small><b>${esc(x.dueDay||5)}th / month</b></div></div><div class="chit-detail-grid"><div><small>Monthly Payable</small><b>${money(monthlyNow)}</b></div><div><small>Total Paid</small><b>${money(paid)}</b></div><div><small>${fixed?'Fixed Amount':'Total Dividend'}</small><b>${money(fixed?x.monthlyAmount:dividend)}</b></div><div><small>${fixed?'Paid Months':'Auction Taken'}</small><b>${fixed?paidRows.length+' month(s)':auctionTaken+' month(s)'}</b></div><div><small>Base Installment</small><b>${money(base)}</b></div><div><small>Chit Date</small><b>${esc(x.chitDay||1)}st / month</b></div></div></div>
+    ${dueInfoHtml}
+    ${payoutRowHtml}
+    <div class="chit-list-actions"><button class="chit-view" onclick="toggleChitSection(${x.id},'details')">View Details</button><button class="chit-view" onclick="toggleChitSection(${x.id},'history')">Payment History</button><button class="edit" onclick="openForm('chitfund',${x.id})">Edit</button><button class="del" onclick="chitDelete(${x.id})">Delete</button></div>
+    <div class="chit-extra chit-details" id="chit-details-${x.id}" hidden><div class="chit-master"><div><small>Chit Value</small><b>${money(value)}</b></div><div><small>Tenure</small><b>${months} Months</b></div><div><small>${fixed?'Plan':'Members'}</small><b>${fixed?'Fixed Monthly':members}</b></div><div><small>Due Date</small><b>${esc(x.dueDay||5)}th / month</b></div></div><div class="chit-detail-grid"><div><small>Monthly Payable</small><b>${money(monthlyNow)}</b></div><div><small>Total Paid</small><b>${money(paid)}</b></div><div><small>Remaining Amount</small><b>${money(remaining)}</b></div><div><small>${fixed?'Fixed Amount':'Total Dividend'}</small><b>${money(fixed?x.monthlyAmount:dividend)}</b></div><div><small>${fixed?'Paid Months':'Auction Taken'}</small><b>${fixed?paidRows.length+' month(s)':auctionTaken+' month(s)'}</b></div><div><small>Base Installment</small><b>${money(base)}</b></div><div><small>Chit Date</small><b>${esc(x.chitDay||1)}st / month</b></div></div></div>
     <div class="chit-extra chit-history" id="chit-history-${x.id}" hidden><div class="chit-month-list">${schedule.map((r,i)=>fixed?`<div class="chit-month-card"><div class="chit-month-top"><div><div class="chit-month-title">${i+1}. ${esc(chitMonthLabel(r.date))}</div><div class="chit-month-date">${esc(r.date)}</div></div><button class="chit-auction-btn chit-fixed-amount" type="button">${money(r.amount)}</button></div><div class="chit-month-meta"><span>Fixed ${money(r.amount)}</span><button class="chit-status ${r.status}" onclick="chitStatus(${x.id},${i})">${r.status==='paid'?'Paid ✓':'Pending'}</button></div></div>`:`<div class="chit-month-card"><div class="chit-month-top"><div><div class="chit-month-title">${i+1}. ${esc(chitMonthLabel(r.date))}</div><div class="chit-month-date">${esc(r.date)}</div></div><button class="chit-auction-btn" onclick="openChitAuction(${x.id},${i})">${r.auctionAmount!==''&&r.auctionAmount!=null?money(r.auctionAmount):'+ Add Amount'}</button></div><div class="chit-month-meta"><span>Net ${money(chitCalc(x,r))}</span><span>Dividend <input class="chit-dividend" type="number" min="0" value="${esc(r.dividend??'')}" onchange="chitUpdate(${x.id},${i},'dividend',this.value)" placeholder="₹"></span><button class="chit-status ${r.status}" onclick="chitStatus(${x.id},${i})">${r.status==='paid'?'Paid ✓':'Pending'}</button><button class="chit-taken ${r.auctionTaken?'active':''}" onclick="chitAuction(${x.id},${i})">${r.auctionTaken?'Taken ✓':'Mark'}</button></div></div>`).join('')}</div><div class="muted">${fixed?'Fixed monthly amount. No Auction / Discount / Divide calculation. Due on ':'Net Payable = Base Monthly Installment − Dividend (or Auction Discount ÷ Members when Dividend is blank). Due on '}${esc(x.dueDay||5)}th of every month.</div></div>
   </div>`;
 }
@@ -3920,8 +3994,9 @@ if(chitCountEl) chitCountEl.textContent=String(totalChits);
 if(chitMonthlyEl) chitMonthlyEl.textContent=money(totalMonthly);
 if(chitMonthsEl) chitMonthsEl.textContent=String(totalMonths);
 if(chitPaidEl) chitPaidEl.textContent=money(totalPaid);
-list("chitfundList","chitfund",chitCard); checkChitReminders();
+renderChitfundList(); checkChitReminders();
 if($("#currency"))$("#currency").value=d.currency;
+if($("#appLanguage"))$("#appLanguage").value=d.language||"en";
 if($("#themeSelect"))$("#themeSelect").value=d.theme||"light";
 if($("#reportDefault"))$("#reportDefault").value=d.reportDefault||"daily";
 updateBackupStatus();
@@ -4377,7 +4452,7 @@ function renderGoals(){
 function clearDataConfirmOk(){
   window.__mithraClearDataAction=null;
   closeBackupUi();
-  d={expenses:[],salary:[],emi:[],loan:[],chitfund:[],goals:[],personalFiles:[],currency:"₹",theme:"light",reportDefault:"daily",brandLogo:"M",brandName:"MithraQ",dashboardIcon:"🏠",dashboardHeadline:"Dashboard"};
+  d={expenses:[],salary:[],emi:[],loan:[],chitfund:[],goals:[],personalFiles:[],currency:"₹",theme:"light",reportDefault:"daily",brandLogo:"M",brandName:"MithraQ",dashboardIcon:"🏠",dashboardHeadline:"Dashboard",language:"en"};
   save();reportInit();
 }
 function clearData(){
@@ -4427,11 +4502,11 @@ function moneyHubCloseModal(){const m=document.getElementById('mhModal');if(m){m
 function moneyHubOpenModal(title,body,saveFn){const m=document.getElementById('mhModal');m.innerHTML='<div class="mh-modal-box"><h3>'+mhEsc(title)+'</h3>'+body+'<div class="mh-modal-actions"><button type="button" onclick="moneyHubCloseModal()">Cancel</button><button type="button" class="primary" id="mhModalSave">Save</button></div></div>';m.classList.add('show');m.setAttribute('aria-hidden','false');document.getElementById('mhModalSave').onclick=saveFn}
 function moneyHubOpenAdd(){moneyHubOpenAccount()}
 function moneyHubOpenAccount(id){const old=id?d.accounts.find(x=>x.id===id):null,x=old||{id:Date.now(),name:'',type:'Bank',balance:0};moneyHubOpenModal(old?'Edit Account':'Add Account','<div class="mh-form-grid"><label>Account name<input id="mhFName" value="'+mhEsc(x.name)+'" placeholder="ICICI Bank"></label><label>Type<select id="mhFType"><option '+(x.type==='Bank'?'selected':'')+'>Bank</option><option '+(x.type==='Cash'?'selected':'')+'>Cash</option><option '+(x.type==='UPI'?'selected':'')+'>UPI</option><option '+(x.type==='Savings'?'selected':'')+'>Savings</option></select></label><label>Current balance<input id="mhFBalance" type="number" value="'+mhNum(x.balance)+'"></label></div>',()=>{const name=document.getElementById('mhFName').value.trim();if(!name){roomRentShowAlert('Please enter an account name.','Account Name Required');return;}x.name=name;x.type=document.getElementById('mhFType').value;x.balance=mhNum(document.getElementById('mhFBalance').value);if(!old)d.accounts.push(x);moneyHubCloseModal();moneyHubSave()})}
-function moneyHubDeleteAccount(id){if(confirm('Delete this account?')){d.accounts=d.accounts.filter(x=>x.id!==id);moneyHubSave()}}
+function moneyHubDeleteAccount(id){const x=(d.accounts||[]).find(a=>a.id===id);roomRentShowConfirm('Delete "'+(x?.name||'this account')+'"?',()=>{d.accounts=d.accounts.filter(x=>x.id!==id);moneyHubSave()},'Delete Account')}
 function moneyHubOpenCard(id){const old=id?d.creditCards.find(x=>x.id===id):null,x=old||{id:Date.now(),name:'',limit:0,used:0,dueDay:'',minimum:0};moneyHubOpenModal(old?'Edit Credit Card':'Add Credit Card','<div class="mh-form-grid"><label>Card name<input id="mhCName" value="'+mhEsc(x.name)+'" placeholder="ICICI Coral"></label><label>Credit limit<input id="mhCLimit" type="number" value="'+mhNum(x.limit)+'"></label><label>Used amount<input id="mhCUsed" type="number" value="'+mhNum(x.used)+'"></label><label>Due day<input id="mhCDay" type="number" min="1" max="31" value="'+mhEsc(x.dueDay)+'"></label><label>Minimum due<input id="mhCMin" type="number" value="'+mhNum(x.minimum)+'"></label></div>',()=>{const name=document.getElementById('mhCName').value.trim();if(!name){roomRentShowAlert('Please enter a card name.','Card Name Required');return;}x.name=name;x.limit=mhNum(document.getElementById('mhCLimit').value);x.used=mhNum(document.getElementById('mhCUsed').value);x.dueDay=document.getElementById('mhCDay').value;x.minimum=mhNum(document.getElementById('mhCMin').value);if(!old)d.creditCards.push(x);moneyHubCloseModal();moneyHubSave()})}
-function moneyHubDeleteCard(id){if(confirm('Delete this card?')){d.creditCards=d.creditCards.filter(x=>x.id!==id);moneyHubSave()}}
+function moneyHubDeleteCard(id){const x=(d.creditCards||[]).find(a=>a.id===id);roomRentShowConfirm('Delete "'+(x?.name||'this card')+'"?',()=>{d.creditCards=d.creditCards.filter(x=>x.id!==id);moneyHubSave()},'Delete Card')}
 function moneyHubOpenReminder(id){const old=id?d.moneyReminders.find(x=>x.id===id):null,x=old||{id:Date.now(),title:'',date:new Date().toISOString().slice(0,10),amount:0,note:''};moneyHubOpenModal(old?'Edit Reminder':'Add Reminder','<div class="mh-form-grid"><label>Title<input id="mhRTitle" value="'+mhEsc(x.title)+'" placeholder="Insurance / Rent"></label><label>Date<input id="mhRDate" type="date" value="'+mhEsc(x.date)+'"></label><label>Amount<input id="mhRAmount" type="number" value="'+mhNum(x.amount)+'"></label><label>Note<input id="mhRNote" value="'+mhEsc(x.note)+'"></label></div>',()=>{const title=document.getElementById('mhRTitle').value.trim();if(!title){roomRentShowAlert('Please enter a reminder title.','Reminder Title Required');return;}x.title=title;x.date=document.getElementById('mhRDate').value;x.amount=mhNum(document.getElementById('mhRAmount').value);x.note=document.getElementById('mhRNote').value.trim();if(!old)d.moneyReminders.push(x);moneyHubCloseModal();moneyHubSave()})}
-function moneyHubDeleteReminder(id){if(confirm('Delete this reminder?')){d.moneyReminders=d.moneyReminders.filter(x=>x.id!==id);moneyHubSave()}}
+function moneyHubDeleteReminder(id){const x=(d.moneyReminders||[]).find(a=>a.id===id);roomRentShowConfirm('Delete "'+(x?.title||'this reminder')+'"?',()=>{d.moneyReminders=d.moneyReminders.filter(x=>x.id!==id);moneyHubSave()},'Delete Reminder')}
 function mhRow(title,meta,amount,actions){return '<div class="mh-item"><div><b>'+mhEsc(title)+'</b><div class="mh-meta">'+mhEsc(meta)+'</div></div><div style="text-align:right"><b>'+mhEsc(amount)+'</b>'+(actions?'<div class="mh-actions">'+actions+'</div>':'')+'</div></div>'}
 function moneyHubUpcoming(){const a=[],today=new Date().toISOString().slice(0,10);(d.moneyReminders||[]).forEach(x=>{if(x.date>=today)a.push({title:x.title,date:x.date,amount:x.amount})});(d.emi||[]).filter(x=>(x.paid||0)<x.total&&x.due).forEach(x=>{if(x.due>=today)a.push({title:'EMI • '+x.name,date:x.due,amount:x.amount})});return a.sort((a,b)=>a.date.localeCompare(b.date))}
 function renderMoneyHub(){if(!document.getElementById('moneyhub'))return;const accounts=d.accounts||[],cards=d.creditCards||[],rem=d.moneyReminders||[],bank=accounts.reduce((a,x)=>a+mhNum(x.balance),0),used=cards.reduce((a,x)=>a+mhNum(x.used),0),loans=(d.loan||[]).reduce((a,x)=>a+Math.max(0,mhNum(x.amount)-mhNum(x.paid)),0);document.getElementById('mhBalance').textContent=money(bank);document.getElementById('mhNetWorth').textContent=money(bank-used-loans);document.getElementById('mhCardDue').textContent=money(used);document.getElementById('mhAccountCount').textContent=accounts.length+' account'+(accounts.length===1?'':'s');document.getElementById('mhCardCount').textContent=cards.length+' card'+(cards.length===1?'':'s');document.getElementById('mhUpcoming').textContent=moneyHubUpcoming().length;document.getElementById('mhOverviewAccounts').innerHTML=accounts.length?accounts.slice(0,5).map(x=>mhRow(x.name,x.type,money(x.balance))).join(''):'<div class="mh-empty">No accounts yet.</div>';document.getElementById('mhOverviewCards').innerHTML=cards.length?cards.slice(0,5).map(x=>mhRow(x.name,'Limit '+money(x.limit)+' • Due '+(x.dueDay||'—'),money(x.used))).join(''):'<div class="mh-empty">No credit cards yet.</div>';document.getElementById('mhOverviewPayments').innerHTML=moneyHubUpcoming().slice(0,6).map(x=>mhRow(x.title,x.date,money(x.amount))).join('')||'<div class="mh-empty">No upcoming payments.</div>';document.getElementById('mhAccountList').innerHTML=accounts.length?accounts.map(x=>mhRow(x.name,x.type,money(x.balance),'<button onclick="moneyHubOpenAccount('+x.id+')">Edit</button><button class="danger" onclick="moneyHubDeleteAccount('+x.id+')">Delete</button>')).join(''):'<div class="mh-empty">Add your bank/cash accounts here.</div>';document.getElementById('mhCardList').innerHTML=cards.length?cards.map(x=>mhRow(x.name,'Limit '+money(x.limit)+' • Available '+money(Math.max(0,x.limit-x.used))+' • Due '+(x.dueDay||'—'),money(x.used),'<button onclick="moneyHubOpenCard('+x.id+')">Edit</button><button class="danger" onclick="moneyHubDeleteCard('+x.id+')">Delete</button>')).join(''):'<div class="mh-empty">Add a credit card here.</div>';document.getElementById('mhReminderList').innerHTML=rem.length?rem.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))).map(x=>mhRow(x.title,(x.date||'')+(x.note?' • '+x.note:''),money(x.amount),'<button onclick="moneyHubOpenReminder('+x.id+')">Edit</button><button class="danger" onclick="moneyHubDeleteReminder('+x.id+')">Delete</button>')).join(''):'<div class="mh-empty">No custom reminders.</div>';renderMoneyHubCalendar();renderMoneyHubNetWorth()}
@@ -5545,6 +5620,7 @@ ready(function(){
   try{ alreadyUnlocked = sessionStorage.getItem('mqAppUnlocked')==='1'; }catch(e){}
   if(!alreadyUnlocked) showLockScreen();
   updateSettingsUI();
+  if(typeof applyAppLanguage==='function') applyAppLanguage(d.language||'en');
   checkBioSupport();
   const r=window.render;
   if(typeof r==='function'){
@@ -5557,6 +5633,137 @@ ready(function(){
     if(e.persisted){ ensureData(); showLockScreen(); }
   });
 });
+})();
+</script>
+
+<script>
+/* ===== MithraQ Multi-Language (Tamil / Telugu / Kannada / Hindi) ===== */
+(function(){
+var MQ_I18N = {
+  "Home":{ta:"முகப்பு",te:"హోమ్",kn:"ಮುಖಪುಟ",hi:"होम"},
+  "Money Hub":{ta:"பண மையம்",te:"మనీ హబ్",kn:"ಹಣ ಕೇಂದ್ರ",hi:"मनी हब"},
+  "Expenses":{ta:"செலவுகள்",te:"ఖర్చులు",kn:"ಖರ್ಚುಗಳು",hi:"खर्च"},
+  "Salary":{ta:"சம்பளம்",te:"జీతం",kn:"ಸಂಬಳ",hi:"वेतन"},
+  "EMI":{ta:"EMI",te:"EMI",kn:"EMI",hi:"ईएमआई"},
+  "Loan":{ta:"கடன்",te:"రుణం",kn:"ಸಾಲ",hi:"ऋण"},
+  "Goals":{ta:"இலக்குகள்",te:"లక్ష్యాలు",kn:"ಗುರಿಗಳು",hi:"लक्ष्य"},
+  "Chit Fund":{ta:"சிட் ஃபண்ட்",te:"చిట్ ఫండ్",kn:"ಚಿಟ್ ಫಂಡ್",hi:"चिट फंड"},
+  "Room Rent":{ta:"அறை வாடகை",te:"రూమ్ రెంట్",kn:"ರೂಮ್ ಬಾಡಿಗೆ",hi:"कमरा किराया"},
+  "Budget":{ta:"பட்ஜெட்",te:"బడ్జెట్",kn:"ಬಜೆಟ್",hi:"बजट"},
+  "Money Calendar":{ta:"பண நாட்காட்டி",te:"మనీ క్యాలెండర్",kn:"ಹಣ ಕ್ಯಾಲೆಂಡರ್",hi:"मनी कैलेंडर"},
+  "Cash Flow Forecast":{ta:"பண ஓட்ட முன்னறிவிப்பு",te:"క్యాష్ ఫ్లో అంచనా",kn:"ನಗದು ಹರಿವಿನ ಮುನ್ಸೂಚನೆ",hi:"नकदी प्रवाह पूर्वानुमान"},
+  "Reports":{ta:"அறிக்கைகள்",te:"నివేదికలు",kn:"ವರದಿಗಳು",hi:"रिपोर्ट"},
+  "Money Coach":{ta:"பண பயிற்சியாளர்",te:"మనీ కోచ్",kn:"ಹಣ ತರಬೇತುದಾರ",hi:"मनी कोच"},
+  "Alerts":{ta:"எச்சரிக்கைகள்",te:"అలర్ట్‌లు",kn:"ಎಚ್ಚರಿಕೆಗಳು",hi:"अलर्ट"},
+  "Document Vault":{ta:"ஆவண பெட்டகம்",te:"డాక్యుమెంట్ వాల్ట్",kn:"ದಾಖಲೆ ವಾಲ್ಟ್",hi:"दस्तावेज़ वॉल्ट"},
+  "🗂️ Document Vault":{ta:"🗂️ ஆவண பெட்டகம்",te:"🗂️ డాక్యుమెంట్ వాల్ట్",kn:"🗂️ ದಾಖಲೆ ವಾಲ್ಟ್",hi:"🗂️ दस्तावेज़ वॉल्ट"},
+  "💰 Money":{ta:"💰 பணம்",te:"💰 డబ్బు",kn:"💰 ಹಣ",hi:"💰 पैसा"},
+  "🎯 Planning":{ta:"🎯 திட்டமிடல்",te:"🎯 ప్రణాళిక",kn:"🎯 ಯೋಜನೆ",hi:"🎯 योजना"},
+  "📊 Insights":{ta:"📊 நுண்ணறிவு",te:"📊 అంతర్దృష్టులు",kn:"📊 ಒಳನೋಟಗಳು",hi:"📊 अंतर्दृष्टि"},
+  "📁 Personal File":{ta:"📁 தனிப்பட்ட கோப்பு",te:"📁 వ్యక్తిగత ఫైల్",kn:"📁 ವೈಯಕ್ತಿಕ ಫೈಲ್",hi:"📁 व्यक्तिगत फ़ाइल"},
+  "EXPENSE-WISE LIST":{ta:"செலவு பட்டியல்",te:"ఖర్చుల జాబితా",kn:"ಖರ್ಚಿನ ಪಟ್ಟಿ",hi:"खर्च सूची"},
+  "SALARY-WISE LIST":{ta:"சம்பள பட்டியல்",te:"జీతం జాబితా",kn:"ಸಂಬಳದ ಪಟ್ಟಿ",hi:"वेतन सूची"},
+  "MONTHLY COMMITMENTS":{ta:"மாதாந்திர கடமைகள்",te:"నెలవారీ కమిట్‌మెంట్‌లు",kn:"ಮಾಸಿಕ ಬದ್ಧತೆಗಳು",hi:"मासिक प्रतिबद्धताएँ"},
+  "EMI-wise List":{ta:"EMI பட்டியல்",te:"EMI జాబితా",kn:"EMI ಪಟ್ಟಿ",hi:"ईएमआई सूची"},
+  "BORROWED MONEY":{ta:"கடன் வாங்கிய பணம்",te:"అప్పు తీసుకున్న డబ్బు",kn:"ಸಾಲ ಪಡೆದ ಹಣ",hi:"उधार लिया पैसा"},
+  "Loan-wise List":{ta:"கடன் பட்டியல்",te:"రుణాల జాబితా",kn:"ಸಾಲದ ಪಟ್ಟಿ",hi:"ऋण सूची"},
+  "MONTHLY CHIT COMMITMENTS":{ta:"மாதாந்திர சிட் கடமைகள்",te:"నెలవారీ చిట్ కమిట్‌మెంట్‌లు",kn:"ಮಾಸಿಕ ಚಿಟ್ ಬದ್ಧತೆಗಳು",hi:"मासिक चिट प्रतिबद्धताएँ"},
+  "Chit-wise List":{ta:"சிட் பட்டியல்",te:"చిట్ జాబితా",kn:"ಚಿಟ್ ಪಟ್ಟಿ",hi:"चिट सूची"},
+  "GOAL PLANNER":{ta:"இலக்கு திட்டமிடுபவர்",te:"గోల్ ప్లానర్",kn:"ಗುರಿ ಯೋಜಕ",hi:"लक्ष्य योजनाकार"},
+  "DAILY & MONTHLY":{ta:"தினசரி & மாதாந்திரம்",te:"రోజువారీ & నెలవారీ",kn:"ದೈನಂದಿನ ಮತ್ತು ಮಾಸಿಕ",hi:"दैनिक और मासिक"},
+  "ALL-IN-ONE MONEY CONTROL":{ta:"அனைத்தும் ஒன்றில் பண கட்டுப்பாடு",te:"అన్నీ ఒకేచోట మనీ కంట్రోల్",kn:"ಎಲ್ಲವೂ ಒಂದೇ ಕಡೆ ಹಣ ನಿಯಂತ್ರಣ",hi:"सब कुछ एक जगह मनी कंट्रोल"},
+  "SMART MONEY NOTIFICATIONS":{ta:"ஸ்மார்ட் பண அறிவிப்புகள்",te:"స్మార్ట్ మనీ నోటిఫికేషన్‌లు",kn:"ಸ್ಮಾರ್ಟ್ ಹಣ ಅಧಿಸೂಚನೆಗಳು",hi:"स्मार्ट मनी सूचनाएं"},
+  "Alerts & Reminders":{ta:"எச்சரிக்கைகள் & நினைவூட்டல்கள்",te:"అలర్ట్‌లు & రిమైండర్‌లు",kn:"ಎಚ್ಚರಿಕೆಗಳು ಮತ್ತು ಜ್ಞಾಪನೆಗಳು",hi:"अलर्ट और रिमाइंडर"},
+  "PERSONAL FILE":{ta:"தனிப்பட்ட கோப்பு",te:"వ్యక్తిగత ఫైల్",kn:"ವೈಯಕ್ತಿಕ ಫೈಲ್",hi:"व्यक्तिगत फ़ाइल"},
+  "PLANNING":{ta:"திட்டமிடல்",te:"ప్రణాళిక",kn:"ಯೋಜನೆ",hi:"योजना"},
+  "CUSTOMIZE APP":{ta:"ஆப்பை தனிப்பயனாக்கு",te:"యాప్‌ను అనుకూలీకరించండి",kn:"ಆ್ಯಪ್ ಅನ್ನು ಕಸ್ಟಮೈಸ್ ಮಾಡಿ",hi:"ऐप कस्टमाइज़ करें"},
+  "Settings":{ta:"அமைப்புகள்",te:"సెట్టింగ్‌లు",kn:"ಸೆಟ್ಟಿಂಗ್‌ಗಳು",hi:"सेटिंग्स"},
+  "AUTOMATE":{ta:"தானியங்குபடுத்து",te:"ఆటోమేట్ చేయండి",kn:"ಸ್ವಯಂಚಾಲಿತಗೊಳಿಸಿ",hi:"स्वचालित करें"},
+  "Recurring Expenses":{ta:"தொடர் செலவுகள்",te:"పునరావృత ఖర్చులు",kn:"ಪುನರಾವರ್ತಿತ ಖರ್ಚುಗಳು",hi:"आवर्ती खर्च"},
+  "VISUAL INSIGHTS":{ta:"காட்சி நுண்ணறிவு",te:"విజువల్ ఇన్‌సైట్స్",kn:"ದೃಶ್ಯ ಒಳನೋಟಗಳು",hi:"विज़ुअल इनसाइट्स"},
+  "Charts":{ta:"விளக்கப்படங்கள்",te:"చార్టులు",kn:"ಚಾರ್ಟ್‌ಗಳು",hi:"चार्ट"},
+  "Preferences":{ta:"விருப்பத்தேர்வுகள்",te:"ప్రాధాన్యతలు",kn:"ಆದ್ಯತೆಗಳು",hi:"प्राथमिकताएं"},
+  "Personalize your app":{ta:"உங்கள் ஆப்பை தனிப்பயனாக்குங்கள்",te:"మీ యాప్‌ను వ్యక్తిగతీకరించండి",kn:"ನಿಮ್ಮ ಆ್ಯಪ್ ಅನ್ನು ವೈಯಕ್ತೀಕರಿಸಿ",hi:"अपने ऐप को निजीकृत करें"},
+  "Data & Backup":{ta:"தரவு & காப்புப்பிரதி",te:"డేటా & బ్యాకప్",kn:"ಡೇಟಾ ಮತ್ತು ಬ್ಯಾಕಪ್",hi:"डेटा और बैकअप"},
+  "Keep your finance data safe":{ta:"உங்கள் நிதி தரவை பாதுகாப்பாக வையுங்கள்",te:"మీ ఆర్థిక డేటాను సురక్షితంగా ఉంచండి",kn:"ನಿಮ್ಮ ಹಣಕಾಸು ಡೇಟಾವನ್ನು ಸುರಕ್ಷಿತವಾಗಿರಿಸಿ",hi:"अपने वित्तीय डेटा को सुरक्षित रखें"},
+  "Branding":{ta:"பிராண்டிங்",te:"బ్రాండింగ్",kn:"ಬ್ರ್ಯಾಂಡಿಂಗ್",hi:"ब्रांडिंग"},
+  "Change your headline":{ta:"உங்கள் தலைப்பை மாற்றவும்",te:"మీ హెడ్‌లైన్‌ను మార్చండి",kn:"ನಿಮ್ಮ ಹೆಡ್‌ಲೈನ್ ಬದಲಾಯಿಸಿ",hi:"अपनी हेडलाइन बदलें"},
+  "Budget Preferences":{ta:"பட்ஜெட் விருப்பங்கள்",te:"బడ్జెట్ ప్రాధాన్యతలు",kn:"ಬಜೆಟ್ ಆದ್ಯತೆಗಳು",hi:"बजट प्राथमिकताएं"},
+  "Control your budget alert preferences":{ta:"உங்கள் பட்ஜெட் எச்சரிக்கை விருப்பங்களை கட்டுப்படுத்துங்கள்",te:"మీ బడ్జెట్ అలర్ట్ ప్రాధాన్యతలను నియంత్రించండి",kn:"ನಿಮ್ಮ ಬಜೆಟ್ ಎಚ್ಚರಿಕೆ ಆದ್ಯತೆಗಳನ್ನು ನಿಯಂತ್ರಿಸಿ",hi:"अपनी बजट अलर्ट प्राथमिकताएं नियंत्रित करें"},
+  "Privacy":{ta:"தனியுரிமை",te:"గోప్యత",kn:"ಗೌಪ್ಯತೆ",hi:"गोपनीयता"},
+  "Your data stays with you":{ta:"உங்கள் தரவு உங்களிடமே இருக்கும்",te:"మీ డేటా మీ దగ్గరే ఉంటుంది",kn:"ನಿಮ್ಮ ಡೇಟಾ ನಿಮ್ಮೊಂದಿಗೇ ಇರುತ್ತದೆ",hi:"आपका डेटा आपके पास ही रहता है"},
+  "App Lock":{ta:"ஆப் லாக்",te:"యాప్ లాక్",kn:"ಆ್ಯಪ್ ಲಾಕ್",hi:"ऐप लॉक"},
+  "Ask for a PIN when the app opens":{ta:"ஆப் திறக்கும்போது பின் கேளுங்கள்",te:"యాప్ తెరిచినప్పుడు పిన్ అడగండి",kn:"ಆ್ಯಪ್ ತೆರೆದಾಗ ಪಿನ್ ಕೇಳಿ",hi:"ऐप खुलने पर पिन मांगें"},
+  "Currency":{ta:"நாணயம்",te:"కరెన్సీ",kn:"ಕರೆನ್ಸಿ",hi:"मुद्रा"},
+  "Theme":{ta:"தீம்",te:"థీమ్",kn:"ಥೀಮ್",hi:"थीम"},
+  "Default Report":{ta:"இயல்பு அறிக்கை",te:"డిఫాల్ట్ నివేదిక",kn:"ಡೀಫಾಲ್ಟ್ ವರದಿ",hi:"डिफ़ॉल्ट रिपोर्ट"},
+  "Headline":{ta:"தலைப்பு",te:"హెడ్‌లైన్",kn:"ಹೆಡ್‌ಲೈನ್",hi:"हेडलाइन"},
+  "Logo (PNG only)":{ta:"லோகோ (PNG மட்டும்)",te:"లోగో (PNG మాత్రమే)",kn:"ಲೋಗೋ (PNG ಮಾತ್ರ)",hi:"लोगो (केवल PNG)"},
+  "Budget Alert Threshold":{ta:"பட்ஜெட் எச்சரிக்கை வரம்பு",te:"బడ్జెట్ అలర్ట్ థ్రెషోల్డ్",kn:"ಬಜೆಟ್ ಎಚ್ಚರಿಕೆ ಮಿತಿ",hi:"बजट अलर्ट सीमा"},
+  "📤 Export Full Backup":{ta:"📤 முழு காப்புப்பிரதியை ஏற்றுமதி செய்",te:"📤 పూర్తి బ్యాకప్ ఎగుమతి చేయండి",kn:"📤 ಪೂರ್ಣ ಬ್ಯಾಕಪ್ ರಫ್ತು ಮಾಡಿ",hi:"📤 पूर्ण बैकअप निर्यात करें"},
+  "Save all finance data":{ta:"அனைத்து நிதி தரவையும் சேமிக்கவும்",te:"అన్ని ఆర్థిక డేటాను సేవ్ చేయండి",kn:"ಎಲ್ಲಾ ಹಣಕಾಸು ಡೇಟಾವನ್ನು ಉಳಿಸಿ",hi:"सभी वित्तीय डेटा सहेजें"},
+  "📥 Import Backup":{ta:"📥 காப்புப்பிரதியை இறக்குமதி செய்",te:"📥 బ్యాకప్ దిగుమతి చేయండి",kn:"📥 ಬ್ಯಾಕಪ್ ಆಮದು ಮಾಡಿ",hi:"📥 बैकअप आयात करें"},
+  "Restore saved data":{ta:"சேமித்த தரவை மீட்டமைக்கவும்",te:"సేవ్ చేసిన డేటాను పునరుద్ధరించండి",kn:"ಉಳಿಸಿದ ಡೇಟಾವನ್ನು ಮರುಸ್ಥಾಪಿಸಿ",hi:"सहेजा गया डेटा पुनर्स्थापित करें"},
+  "🗑️ Remove Logo":{ta:"🗑️ லோகோவை நீக்கு",te:"🗑️ లోగో తొలగించండి",kn:"🗑️ ಲೋಗೋ ತೆಗೆದುಹಾಕಿ",hi:"🗑️ लोगो हटाएं"},
+  "Use headline text instead":{ta:"பதிலாக தலைப்பு உரையை பயன்படுத்தவும்",te:"బదులుగా హెడ్‌లైన్ టెక్స్ట్ ఉపయోగించండి",kn:"ಬದಲಿಗೆ ಹೆಡ್‌ಲೈನ್ ಪಠ್ಯ ಬಳಸಿ",hi:"इसके बजाय हेडलाइन टेक्स्ट का उपयोग करें"},
+  "💾 Save Branding":{ta:"💾 பிராண்டிங்கை சேமி",te:"💾 బ్రాండింగ్ సేవ్ చేయండి",kn:"💾 ಬ್ರ್ಯಾಂಡಿಂಗ್ ಉಳಿಸಿ",hi:"💾 ब्रांडिंग सहेजें"},
+  "Apply logo or headline":{ta:"லோகோ அல்லது தலைப்பை பயன்படுத்தவும்",te:"లోగో లేదా హెడ్‌లైన్ వర్తింపజేయండి",kn:"ಲೋಗೋ ಅಥವಾ ಹೆಡ್‌ಲೈನ್ ಅನ್ವಯಿಸಿ",hi:"लोगो या हेडलाइन लागू करें"},
+  "💾 Save Preferences":{ta:"💾 விருப்பங்களை சேமி",te:"💾 ప్రాధాన్యతలు సేవ్ చేయండి",kn:"💾 ಆದ್ಯತೆಗಳನ್ನು ಉಳಿಸಿ",hi:"💾 प्राथमिकताएं सहेजें"},
+  "Apply your budget alert preference":{ta:"உங்கள் பட்ஜெட் எச்சரிக்கை விருப்பத்தை பயன்படுத்தவும்",te:"మీ బడ్జెట్ అలర్ట్ ప్రాధాన్యతను వర్తింపజేయండి",kn:"ನಿಮ್ಮ ಬಜೆಟ್ ಎಚ್ಚರಿಕೆ ಆದ್ಯತೆಯನ್ನು ಅನ್ವಯಿಸಿ",hi:"अपनी बजट अलर्ट प्राथमिकता लागू करें"},
+  "💾 Save Language":{ta:"💾 மொழியை சேமி",te:"💾 భాషను సేవ్ చేయండి",kn:"💾 ಭಾಷೆಯನ್ನು ಉಳಿಸಿ",hi:"💾 भाषा सहेजें"},
+  "Switch app language":{ta:"ஆப் மொழியை மாற்று",te:"యాప్ భాషను మార్చండి",kn:"ಆ್ಯಪ್ ಭಾಷೆಯನ್ನು ಬದಲಿಸಿ",hi:"ऐप भाषा बदलें"},
+  "Add":{ta:"சேர்",te:"జోడించు",kn:"ಸೇರಿಸಿ",hi:"जोड़ें"},
+  "Dashboard":{ta:"டாஷ்போர்டு",te:"డాష్‌బోర్డ్",kn:"ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",hi:"डैशबोर्ड"},
+  "This Month":{ta:"இந்த மாதம்",te:"ఈ నెల",kn:"ಈ ತಿಂಗಳು",hi:"इस महीने"},
+  "Average":{ta:"சராசரி",te:"సగటు",kn:"ಸರಾಸರಿ",hi:"औसत"},
+  "per transaction":{ta:"ஒரு பரிவர்த்தனைக்கு",te:"ప్రతి లావాదేవీకి",kn:"ಪ್ರತಿ ವಹಿವಾಟಿಗೆ",hi:"प्रति लेनदेन"},
+  "Total Paid":{ta:"மொத்தம் செலுத்தியது",te:"మొత్తం చెల్లించినది",kn:"ಒಟ್ಟು ಪಾವತಿಸಿದ್ದು",hi:"कुल भुगतान"},
+  "Active EMI":{ta:"செயலில் உள்ள EMI",te:"యాక్టివ్ EMI",kn:"ಸಕ್ರಿಯ EMI",hi:"सक्रिय ईएमआई"},
+  "Monthly EMI":{ta:"மாத EMI",te:"నెలవారీ EMI",kn:"ಮಾಸಿಕ EMI",hi:"मासिक ईएमआई"},
+  "EMI List":{ta:"EMI பட்டியல்",te:"EMI జాబితా",kn:"EMI ಪಟ್ಟಿ",hi:"ईएमआई सूची"},
+  "Next Payment":{ta:"அடுத்த கட்டணம்",te:"తదుపరి చెల్లింపు",kn:"ಮುಂದಿನ ಪಾವತಿ",hi:"अगला भुगतान"},
+  "Total Chits":{ta:"மொத்த சிட்கள்",te:"మొత్తం చిట్‌లు",kn:"ಒಟ್ಟು ಚಿಟ್‌ಗಳು",hi:"कुल चिट"},
+  "Monthly Payable":{ta:"மாதம் செலுத்த வேண்டியது",te:"నెలవారీ చెల్లించవలసినది",kn:"ಮಾಸಿಕ ಪಾವತಿಸಬೇಕಾದದ್ದು",hi:"मासिक देय राशि"},
+  "Total Months":{ta:"மொத்த மாதங்கள்",te:"మొత్తం నెలలు",kn:"ಒಟ್ಟು ತಿಂಗಳುಗಳು",hi:"कुल महीने"},
+  "Net Worth":{ta:"நிகர மதிப்பு",te:"నికర విలువ",kn:"ನಿವ್ವಳ ಮೌಲ್ಯ",hi:"निवल मूल्य"},
+  "Bank & Cash":{ta:"வங்கி & பணம்",te:"బ్యాంక్ & నగదు",kn:"ಬ್ಯಾಂಕ್ ಮತ್ತು ನಗದು",hi:"बैंक और नकद"},
+  "Card Used":{ta:"பயன்படுத்திய கார்டு",te:"ఉపయోగించిన కార్డు",kn:"ಬಳಸಿದ ಕಾರ್ಡ್",hi:"उपयोग किया कार्ड"},
+  "Upcoming":{ta:"வரவிருக்கும்",te:"రాబోయే",kn:"ಮುಂಬರುವ",hi:"आगामी"}
+};
+
+function mqApplyTranslations(lang){
+  var sel = '.sidebar nav span, .nav-group-title, .mobile-menu-section-title, .mobile-menu-section-grid span, .mobile-bottom-actions span, .title h2, .title small, .settings-section-title b, .settings-section-title small, .settings-action b, .settings-action small, .stat small, .hero small, .hero h2, .expense-summary-card small, .emi-page-summary small, .emi-page-names small, .emi-next-card small, .chit-summary small, .mh-card small, .add, .logo small';
+  document.querySelectorAll(sel).forEach(function(el){
+    if(el.dataset.mqEn===undefined){ el.dataset.mqEn = el.textContent.trim(); }
+    var key = el.dataset.mqEn;
+    var t = MQ_I18N[key];
+    if(t){ el.textContent = (lang==='en') ? key : (t[lang] || key); }
+  });
+  document.querySelectorAll('.settings-fields label').forEach(function(lb){
+    var node = lb.childNodes[0];
+    if(node && node.nodeType===3 && node.textContent.trim()){
+      if(lb.dataset.mqEn===undefined){ lb.dataset.mqEn = node.textContent.trim(); }
+      var key = lb.dataset.mqEn;
+      var t = MQ_I18N[key];
+      if(t){ node.textContent = (lang==='en') ? key : (t[lang] || key); }
+    }
+  });
+}
+
+window.applyAppLanguage = function(lang){
+  try{ mqApplyTranslations(lang || 'en'); }catch(e){}
+};
+
+window.saveAppLanguage = function(){
+  if(typeof ensureData==='function' && !ensureData()) return;
+  var sel = document.getElementById('appLanguage');
+  var lang = sel ? sel.value : 'en';
+  if(typeof d!=='undefined'){ d.language = lang; if(typeof save==='function') save(); }
+  applyAppLanguage(lang);
+  if(typeof backupNotice==='function'){
+    backupNotice('Language Updated','MithraQ will now show text in your chosen language.','🌐');
+  }
+};
 })();
 </script>
 
