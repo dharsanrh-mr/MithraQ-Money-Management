@@ -4116,15 +4116,39 @@ async function personalFileShare(id,idx){
   if(!f?.data){alert("Document file is not available.");return}
   try{
     const blob=pfDataUrlToBlob(f);
-    const shareFile=new File([blob],f.name||"document",{type:f.type||"application/octet-stream"});
-    if(navigator.canShare&&navigator.canShare({files:[shareFile]})){
-      await navigator.share({files:[shareFile],title:x.name||f.name||"Document"});
-    }else if(navigator.share){
-      await navigator.share({title:x.name||f.name||"Document",text:"Sharing document: "+(x.name||f.name||"Document")});
-    }else{
-      personalFileDownloadFile(f,x.name);
+    const filename=f.name||"document";
+    const mime=f.type||"application/octet-stream";
+    const shareText="Sharing document: "+(x.name||filename);
+
+    // Native Android WebView: always open the real system share sheet with the file.
+    // This prevents the Share button from being intercepted as a download.
+    if(window.Android && typeof window.Android.shareFile==="function"){
+      const reader=new FileReader();
+      const base64=await new Promise((resolve,reject)=>{
+        reader.onload=()=>{
+          const v=String(reader.result||"");
+          const comma=v.indexOf(",");
+          resolve(comma>=0?v.slice(comma+1):v);
+        };
+        reader.onerror=reject;
+        reader.readAsDataURL(blob);
+      });
+      window.Android.shareFile(base64,filename,mime,shareText);
+      return;
     }
-  }catch(e){if(e && e.name!=="AbortError")personalFileDownloadFile(f,x.name)}
+
+    // Browser fallback: use Web Share only when file sharing is supported.
+    const shareFile=new File([blob],filename,{type:mime});
+    if(navigator.share && (!navigator.canShare || navigator.canShare({files:[shareFile]}))){
+      await navigator.share({files:[shareFile],title:x.name||filename,text:shareText});
+      return;
+    }
+
+    // Last-resort browser fallback only when no file-share API exists.
+    personalFileDownloadFile(f,x.name);
+  }catch(e){
+    if(e && e.name!=="AbortError") alert("Unable to share this document. Please try again.");
+  }
 }
 function personalFileRename(id){
   const x=(d.personalFiles||[]).find(a=>a.id===id);if(!x)return;
@@ -4784,10 +4808,32 @@ async function saveReportDownload(){
 }
 async function shareReportDownload(){
   const item=window.__mithraReportDownload;
-  if(!item||!navigator.share)return;
-  const file=new File([item.content],item.filename,{type:item.mime||"text/csv;charset=utf-8"});
+  if(!item)return;
+  const mime=item.mime||"text/csv;charset=utf-8";
+  const shareText="MithraQ Smart Money Tracker report";
   try{
-    if(!navigator.canShare || navigator.canShare({files:[file]})) await navigator.share({files:[file],title:item.filename,text:"MithraQ Smart Money Tracker report"});
+    // Native Android WebView: use the real Android share sheet instead of a download fallback.
+    if(window.Android && typeof window.Android.shareFile==="function"){
+      const blob=new Blob([item.content],{type:mime});
+      const reader=new FileReader();
+      const base64=await new Promise((resolve,reject)=>{
+        reader.onload=()=>{
+          const v=String(reader.result||"");
+          const comma=v.indexOf(",");
+          resolve(comma>=0?v.slice(comma+1):v);
+        };
+        reader.onerror=reject;
+        reader.readAsDataURL(blob);
+      });
+      window.Android.shareFile(base64,item.filename,mime,shareText);
+      return;
+    }
+
+    const file=new File([item.content],item.filename,{type:mime});
+    if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+      await navigator.share({files:[file],title:item.filename,text:shareText});
+      return;
+    }
   }catch(e){if(e?.name!=="AbortError") console.warn(e)}
 }
 function downloadRows(filename,headers,rows){
