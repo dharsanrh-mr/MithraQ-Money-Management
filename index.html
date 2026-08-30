@@ -1552,6 +1552,7 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
 </style>
 </head>
 <body>
+<div id="appLockScreen" class="app-lock-overlay" aria-hidden="true"></div>
 <aside class="sidebar"><div class="logo"><div class="logoicon">₹</div><div><b>Mithra</b><small>Expenses Tracker</small></div></div><nav>
 <div class="nav-group"><div class="nav-group-title">💰 Money</div><button class="active" data-page="home">🏠 <span>Home</span></button><button data-page="moneyhub">💼 <span>Money Hub</span></button><button data-page="expenses">💸 <span>Expenses</span></button><button data-page="salary">💰 <span>Salary</span></button><button data-page="emi">💳 <span>EMI</span></button><button data-page="loan">🏦 <span>Loan</span></button></div><div class="nav-group"><div class="nav-group-title">🎯 Planning</div><button data-page="goal">🎯 <span>Goals</span></button><button data-page="chitfund">👥 <span>Chit Fund</span></button><button data-page="roomrent">🏠 <span>Room Rent</span></button><button data-page="budget">💳 <span>Budget</span></button><button data-page="moneycalendar">📅 <span>Money Calendar</span></button><button data-page="cashflow">📈 <span>Cash Flow Forecast</span></button></div><div class="nav-group"><div class="nav-group-title">📊 Insights</div><button data-page="reports">📊 <span>Reports</span></button><button data-page="moneycoach">🧠 <span>Money Coach</span></button><button data-page="alerts">🔔 <span>Alerts</span></button></div><div class="nav-group"><div class="nav-group-title">📁 Personal File</div><button data-page="personalfile">🗂️ <span>Document Vault</span></button></div></nav>
 <div class="mobile-bottom-actions" aria-label="Bottom navigation">
@@ -2000,6 +2001,21 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
         <b>Stored privately on this device</b>
         <p>Your finance data is stored in this browser using Local Storage. Tap here to check the storage status.</p>
       </div>
+    </div>
+  </div>
+
+  <div class="settings-card">
+    <div class="settings-section-title">🔐 <div><b>App Lock</b><small>Ask for a PIN when the app opens</small></div></div>
+    <div class="settings-privacy" role="button" tabindex="0" id="appLockToggleRow" onclick="window.appLockToggleClick&&window.appLockToggleClick()" onkeydown="if((event.key==='Enter'||event.key===' ')&&window.appLockToggleClick)window.appLockToggleClick()" aria-label="Toggle app lock">
+      <div class="settings-privacy-icon">🔒</div>
+      <div>
+        <b id="appLockStatusTitle">App Lock is Off</b>
+        <p id="appLockStatusText">Turn on to require a PIN every time you open MithraQ.</p>
+      </div>
+    </div>
+    <div class="settings-action-grid" id="appLockActions" hidden>
+      <button class="settings-action" type="button" onclick="window.appLockOpenChangePin&&window.appLockOpenChangePin()"><b>🔁 Change PIN</b><small>Update your app lock PIN</small></button>
+      <button class="settings-action" type="button" onclick="window.appLockNow&&window.appLockNow()"><b>🔒 Lock Now</b><small>Lock the app immediately</small></button>
     </div>
   </div>
 
@@ -5133,6 +5149,211 @@ window.go=function(p, fromHistory){
   document.addEventListener('DOMContentLoaded',function(){setTimeout(renderLoanPageReliably,200)});
   setTimeout(renderLoanPageReliably,500);
   setTimeout(renderLoanPageReliably,1200);
+})();
+</script>
+
+<style id="app-lock-only">
+#appLockScreen{display:none;position:fixed;inset:0;z-index:99999;background:linear-gradient(135deg,#6d28d9,#4c1d95);align-items:center;justify-content:center;padding:20px}
+#appLockScreen.show{display:flex}
+body.app-locked{overflow:hidden}
+.app-lock-card{width:min(360px,100%);background:#fff;border-radius:26px;padding:30px 22px 24px;text-align:center;box-shadow:0 25px 70px rgba(0,0,0,.4)}
+.app-lock-icon{width:56px;height:56px;border-radius:16px;background:#f3eaff;color:#7c3aed;font-size:26px;display:grid;place-items:center;margin:0 auto 12px}
+.app-lock-card h3{margin:0 0 4px;color:#20233a;font-size:19px}
+.app-lock-card p{margin:0 0 18px;color:#7a7d8d;font-size:13px}
+.app-lock-dots{display:flex;justify-content:center;gap:14px;margin-bottom:10px}
+.app-lock-dot{width:14px;height:14px;border-radius:50%;background:#eee5fb;border:1px solid #d9c8f5;transition:background .15s}
+.app-lock-dot.filled{background:#7c3aed;border-color:#7c3aed}
+.app-lock-error{min-height:18px;color:#e11d48;font-size:12px;font-weight:700;margin-bottom:6px}
+.app-lock-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:6px}
+.app-lock-key{border:0;border-radius:16px;padding:16px 0;font-size:19px;font-weight:800;background:#f6f2fd;color:#20233a}
+.app-lock-key:active{transform:scale(.94);background:#ece0fb}
+.app-lock-key-back{font-size:16px;color:#e11d48;background:#fdeef1}
+.app-lock-forgot{display:block;margin:16px auto 0;border:0;background:transparent;color:#7c3aed;font-weight:700;font-size:13px;text-decoration:underline;text-underline-offset:3px}
+.dark .app-lock-forgot{color:#c4b5fd}
+.app-lock-forgot-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.app-lock-forgot-actions button{border:0;border-radius:14px;padding:13px;font-weight:800;font-size:13px}
+.app-lock-forgot-cancel{background:#f6f2fd;color:#20233a}
+.app-lock-forgot-confirm{background:linear-gradient(135deg,#e11d48,#f43f5e);color:#fff}
+.dark .app-lock-forgot-cancel{background:#22243a;color:#fff}
+@keyframes appLockShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-8px)}40%,60%{transform:translateX(8px)}}
+.app-lock-shake{animation:appLockShake .45s}
+.dark .app-lock-card{background:#181a2b}
+.dark .app-lock-card h3{color:#fff}
+.dark .app-lock-card p{color:#9295a7}
+.dark .app-lock-key{background:#22243a;color:#fff}
+.dark .app-lock-key-back{background:#3a2230;color:#fb7185}
+.dark .app-lock-dot{background:#2a2c40;border-color:#3a3d55}
+</style>
+<script id="app-lock-feature">
+(function(){
+'use strict';
+function ready(fn){ if(document.readyState!=='loading') fn(); else document.addEventListener('DOMContentLoaded',fn); }
+function ensureData(){
+  if(typeof d==='undefined'||!d) return false;
+  if(typeof d.appLockEnabled!=='boolean') d.appLockEnabled=false;
+  if(typeof d.appLockPin!=='string') d.appLockPin='';
+  return true;
+}
+function esc3(v){ const e=document.createElement('div'); e.textContent=String(v??''); return e.innerHTML; }
+function persist(){ try{ if(typeof save==='function'){ save(); return; } }catch(e){} try{ if(typeof mqPersist==='function') mqPersist(); }catch(e){} }
+
+let pinBuffer='';
+function dotsHtml(len){ let h=''; for(let i=0;i<len;i++) h+='<span class="app-lock-dot"></span>'; return h; }
+function renderDots(){
+  const wrap=document.getElementById('appLockDots'); if(!wrap) return;
+  const kids=wrap.children;
+  for(let i=0;i<kids.length;i++) kids[i].classList.toggle('filled', i<pinBuffer.length);
+}
+function lockScreenHtml(){
+  const brand=(typeof d!=='undefined'&&d.brandName)?d.brandName:'MithraQ';
+  const len=(typeof d!=='undefined'&&d.appLockPin&&d.appLockPin.length)||4;
+  const keys=['1','2','3','4','5','6','7','8','9','','0','back'];
+  return '<div class="app-lock-card">'
+    +'<div class="app-lock-icon">🔒</div>'
+    +'<h3>'+esc3(brand)+' is Locked</h3>'
+    +'<p>Enter your PIN to continue</p>'
+    +'<div class="app-lock-dots" id="appLockDots">'+dotsHtml(len)+'</div>'
+    +'<div class="app-lock-error" id="appLockError"></div>'
+    +'<div class="app-lock-keypad">'
+    +keys.map(function(k){
+        if(k==='') return '<span></span>';
+        if(k==='back') return '<button type="button" class="app-lock-key app-lock-key-back" onclick="window.appLockKey(\'back\')">⌫</button>';
+        return '<button type="button" class="app-lock-key" onclick="window.appLockKey(\''+k+'\')">'+k+'</button>';
+      }).join('')
+    +'</div>'
+    +'<button type="button" class="app-lock-forgot" onclick="window.appLockShowForgot()">Forgot PIN?</button>'
+    +'</div>';
+}
+function forgotConfirmHtml(){
+  const brand=(typeof d!=='undefined'&&d.brandName)?d.brandName:'MithraQ';
+  return '<div class="app-lock-card">'
+    +'<div class="app-lock-icon">⚠️</div>'
+    +'<h3>Forgot your PIN?</h3>'
+    +'<p>Turning off App Lock will open '+esc3(brand)+' right away without asking for a PIN. You can set a new PIN anytime from Settings.</p>'
+    +'<div class="app-lock-forgot-actions">'
+    +'<button type="button" class="app-lock-forgot-cancel" onclick="window.appLockCancelForgot()">Cancel</button>'
+    +'<button type="button" class="app-lock-forgot-confirm" onclick="window.appLockResetConfirmed()">Turn Off App Lock</button>'
+    +'</div></div>';
+}
+window.appLockShowForgot=function(){
+  const ov=document.getElementById('appLockScreen'); if(!ov) return;
+  ov.innerHTML=forgotConfirmHtml();
+};
+window.appLockCancelForgot=function(){ showLockScreen(); };
+window.appLockResetConfirmed=function(){
+  if(!ensureData()) return;
+  d.appLockEnabled=false; d.appLockPin='';
+  persist();
+  hideLockScreen();
+  updateSettingsUI();
+  if(typeof backupNotice==='function') backupNotice('App Lock Disabled','MithraQ opened without a PIN. Set a new PIN anytime from Settings.','🔓');
+};
+function showLockScreen(){
+  if(!ensureData()) return;
+  if(!d.appLockEnabled || !d.appLockPin) return;
+  const ov=document.getElementById('appLockScreen'); if(!ov) return;
+  pinBuffer='';
+  ov.innerHTML=lockScreenHtml();
+  ov.classList.add('show'); ov.setAttribute('aria-hidden','false');
+  document.body.classList.add('app-locked');
+}
+function hideLockScreen(){
+  const ov=document.getElementById('appLockScreen');
+  if(ov){ ov.classList.remove('show'); ov.innerHTML=''; ov.setAttribute('aria-hidden','true'); }
+  document.body.classList.remove('app-locked');
+}
+function tryUnlock(){
+  const needed=(d.appLockPin||'').length||4;
+  if(pinBuffer.length<needed) return;
+  if(pinBuffer===d.appLockPin){ hideLockScreen(); pinBuffer=''; }
+  else{
+    const err=document.getElementById('appLockError'); if(err) err.textContent='Incorrect PIN, try again';
+    const card=document.querySelector('#appLockScreen .app-lock-card');
+    if(card){ card.classList.remove('app-lock-shake'); void card.offsetWidth; card.classList.add('app-lock-shake'); }
+    pinBuffer=''; renderDots();
+  }
+}
+window.appLockKey=function(k){
+  const err=document.getElementById('appLockError'); if(err) err.textContent='';
+  if(k==='back'){ pinBuffer=pinBuffer.slice(0,-1); renderDots(); return; }
+  if(pinBuffer.length>=8) return;
+  pinBuffer+=k; renderDots(); tryUnlock();
+};
+window.appLockNow=function(){ showLockScreen(); };
+
+function pinSetupHtml(mode){
+  const title = mode==='change' ? 'Change PIN' : 'Set App Lock PIN';
+  return '<div class="backup-ui-box">'
+    +'<div class="backup-ui-icon">🔒</div><h3>'+title+'</h3>'
+    +'<p>Choose a 4-digit PIN you will use to unlock '+esc3((typeof d!=='undefined'&&d.brandName)?d.brandName:'MithraQ')+'.</p>'
+    +'<input id="appLockPinInput1" type="tel" inputmode="numeric" maxlength="6" placeholder="New PIN" style="width:100%;padding:13px;border-radius:12px;border:1px solid #e4deed;font-size:16px;letter-spacing:4px;text-align:center">'
+    +'<input id="appLockPinInput2" type="tel" inputmode="numeric" maxlength="6" placeholder="Confirm PIN" style="width:100%;padding:13px;border-radius:12px;border:1px solid #e4deed;font-size:16px;letter-spacing:4px;text-align:center;margin-top:10px">'
+    +'<div class="app-lock-error" id="appLockSetupError"></div>'
+    +'<div class="backup-ui-actions">'
+    +'<button type="button" class="backup-ui-cancel" onclick="window.appLockCancelSetup()">Cancel</button>'
+    +'<button type="button" class="backup-ui-primary" onclick="window.appLockConfirmSetup(\''+mode+'\')">Save PIN</button>'
+    +'</div></div>';
+}
+function openSetupModal(mode){
+  const m=document.getElementById('backupUiModal'); if(!m) return;
+  m.innerHTML=pinSetupHtml(mode);
+  m.classList.add('show'); m.setAttribute('aria-hidden','false');
+  setTimeout(function(){ const i=document.getElementById('appLockPinInput1'); if(i) i.focus(); },50);
+}
+window.appLockCancelSetup=function(){
+  const m=document.getElementById('backupUiModal');
+  if(m){ m.classList.remove('show'); m.innerHTML=''; m.setAttribute('aria-hidden','true'); }
+  updateSettingsUI();
+};
+window.appLockConfirmSetup=function(mode){
+  const p1=(document.getElementById('appLockPinInput1')||{}).value||'';
+  const p2=(document.getElementById('appLockPinInput2')||{}).value||'';
+  const err=document.getElementById('appLockSetupError');
+  if(!/^\d{4,6}$/.test(p1)){ if(err) err.textContent='PIN must be 4-6 digits'; return; }
+  if(p1!==p2){ if(err) err.textContent='PINs do not match'; return; }
+  d.appLockPin=p1; d.appLockEnabled=true;
+  persist();
+  window.appLockCancelSetup();
+  if(typeof backupNotice==='function') backupNotice('App Lock '+(mode==='change'?'Updated':'Enabled'), mode==='change'?'Your PIN has been updated.':'MithraQ will now ask for your PIN when you open the app.','🔒');
+  updateSettingsUI();
+};
+window.appLockOpenChangePin=function(){ openSetupModal('change'); };
+window.appLockToggleClick=function(){
+  if(!ensureData()) return;
+  if(d.appLockEnabled){
+    d.appLockEnabled=false; d.appLockPin='';
+    persist();
+    if(typeof backupNotice==='function') backupNotice('App Lock Disabled','MithraQ will open without a PIN now.','🔓');
+    updateSettingsUI();
+  } else {
+    openSetupModal('enable');
+  }
+};
+function updateSettingsUI(){
+  if(!ensureData()) return;
+  const title=document.getElementById('appLockStatusTitle');
+  const text=document.getElementById('appLockStatusText');
+  const actions=document.getElementById('appLockActions');
+  if(title) title.textContent = d.appLockEnabled ? 'App Lock is On' : 'App Lock is Off';
+  if(text) text.textContent = d.appLockEnabled ? 'Tap to turn off app lock.' : 'Turn on to require a PIN every time you open MithraQ.';
+  if(actions) actions.hidden = !d.appLockEnabled;
+}
+
+ready(function(){
+  ensureData();
+  showLockScreen();
+  updateSettingsUI();
+  const r=window.render;
+  if(typeof r==='function'){
+    window.render=function(){ const out=r.apply(this,arguments); updateSettingsUI(); return out; };
+  }
+  // Re-lock only when the page is actually restored after being fully closed
+  // (browser back/forward cache restore on reopen). Simply switching apps or
+  // minimizing does NOT fire this, so the lock will not interrupt that case.
+  window.addEventListener('pageshow', function(e){
+    if(e.persisted){ ensureData(); showLockScreen(); }
+  });
+});
 })();
 </script>
 
