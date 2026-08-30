@@ -3662,31 +3662,27 @@ function clearExpenseDateRange(){const f=$("#expenseFromDate"),t=$("#expenseToDa
 function expenseItemHtml(x,showDate){return `<div class="expense-compact-item"><div class="expense-compact-top"><div><div class="expense-compact-name">${esc(x.title)}</div><div class="expense-compact-meta">${esc(x.category||"Other")}${x.paymentType?" • "+esc(x.paymentType):""}${showDate&&x.date?" • "+esc(new Date(x.date+"T00:00:00").toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})):""}</div>${x.bill?.data?`<div class="expense-attachment">${attachmentKind(x.bill)==="image"?`<img class="expense-thumb" src="${x.bill.data}" alt="Bill">`:"📎"}<span class="expense-file-name">${esc(x.bill.name||"Bill / Receipt")}</span><button onclick="openExpenseBill(${x.id})">View</button><button onclick="downloadExpenseBill(${x.id})">Download</button></div>`:""}</div><div class="expense-compact-amount">${money(x.amount)}</div></div><div class="expense-actions"><button class="edit" onclick="openForm('expense',${x.id})">Edit</button><button class="repeat" onclick="expenseRepeat(${x.id})">🔁 Repeat</button><button class="del" onclick="expenseDelete(${x.id})">Delete</button></div></div>`;}
 function expenseDelete(id){const x=(d.expenses||[]).find(a=>a.id===id);if(!x)return;roomRentShowConfirm('Delete "'+(x.title||"this expense")+'"? This cannot be undone.',()=>{del("expenses",id);},"Delete Expense");}
 function expenseRepeat(id){const x=(d.expenses||[]).find(a=>a.id===id);if(!x)return;const copy={...x,id:Date.now(),date:new Date().toISOString().slice(0,10)};delete copy.bill;d.expenses.push(copy);save();}
-function exportExpensesCSV(){
-  const arr=Array.isArray(expenseCurrentFilteredList)?expenseCurrentFilteredList:[];
-  if(!arr.length){
-    if(typeof roomRentShowAlert==='function')roomRentShowAlert("No expenses to export for the current filter.","Export CSV");
-    else alert("No expenses to export.");
-    return;
-  }
-  const header=["Date","Title","Category","Payment Type","Amount"];
-  const rows=arr.map(x=>[x.date||"",x.title||"",x.category||"Other",x.paymentType||"",x.amount||0]);
-  const csv=[header,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
-  const filename="expenses_"+new Date().toISOString().slice(0,10)+".csv";
-  try{
-    const dataUrl="data:text/csv;charset=utf-8,%EF%BB%BF"+encodeURIComponent(csv);
-    const a=document.createElement("a");a.href=dataUrl;a.download=filename;a.rel="noopener";a.style.display="none";
-    document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),500);
-    if(typeof roomRentShowAlert==='function')roomRentShowAlert("CSV export started.","Export CSV");
-  }catch(e){
-    try{
-      const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
-      const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;a.style.display="none";
-      document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},2000);
-    }catch(err){
-      if(typeof roomRentShowAlert==='function')roomRentShowAlert("CSV export failed. Please try again in Chrome.","Export CSV");
-      else alert("CSV export failed. Please try again in Chrome.");
-    }
+function exportExpensesCSV(){const arr=Array.isArray(expenseCurrentFilteredList)?expenseCurrentFilteredList:[];if(!arr.length){if(typeof roomRentShowAlert==="function")roomRentShowAlert("No expenses to export for the current filter.","Export CSV");else alert("No expenses to export.");return;}const header=["Date","Title","Category","Payment Type","Amount"];const rows=arr.map(x=>[x.date||"",x.title||"",x.category||"Other",x.paymentType||"",x.amount||0]);const csv=[header,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="expenses_"+new Date().toISOString().slice(0,10)+".csv";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
+function initExpenseTools(){const el=$("#expenseSearch");if(el&&!el.dataset.bound){el.dataset.bound="1";el.addEventListener("input",renderExpenses);}
+  const fromEl=$("#expenseFromDate");if(fromEl&&!fromEl.dataset.bound){fromEl.dataset.bound="1";fromEl.addEventListener("change",renderExpenses);}
+  const toEl=$("#expenseToDate");if(toEl&&!toEl.dataset.bound){toEl.dataset.bound="1";toEl.addEventListener("change",renderExpenses);}
+  const sortEl=$("#expenseSort");if(sortEl&&!sortEl.dataset.bound){sortEl.dataset.bound="1";sortEl.addEventListener("change",renderExpenses);}
+  const box=$("#expenseFilters");
+  if(box&&!box.dataset.bound){
+    box.dataset.bound="1";
+    box.addEventListener("click",function(e){
+      const btn=e.target.closest("button.expense-chip");
+      if(!btn||!box.contains(btn))return;
+      e.preventDefault();
+      e.stopPropagation();
+      setExpenseCategory(btn.getAttribute("data-expense-category")||"All");
+    },true);
+    box.addEventListener("pointerup",function(e){
+      const btn=e.target.closest("button.expense-chip");
+      if(!btn||!box.contains(btn))return;
+      e.preventDefault();
+      setExpenseCategory(btn.getAttribute("data-expense-category")||"All");
+    },true);
   }
 }
 function renderExpenses(){
