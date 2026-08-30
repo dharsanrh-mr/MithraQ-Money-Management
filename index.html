@@ -5347,6 +5347,7 @@ function hideLockScreen(){
   const ov=document.getElementById('appLockScreen');
   if(ov){ ov.classList.remove('show'); ov.innerHTML=''; ov.setAttribute('aria-hidden','true'); }
   document.body.classList.remove('app-locked');
+  try{ sessionStorage.setItem('mqAppUnlocked','1'); }catch(e){}
 }
 function tryUnlock(){
   const needed=(d.appLockPin||'').length||4;
@@ -5540,7 +5541,9 @@ function updateSettingsUI(){
 
 ready(function(){
   ensureData();
-  showLockScreen();
+  let alreadyUnlocked=false;
+  try{ alreadyUnlocked = sessionStorage.getItem('mqAppUnlocked')==='1'; }catch(e){}
+  if(!alreadyUnlocked) showLockScreen();
   updateSettingsUI();
   checkBioSupport();
   const r=window.render;
