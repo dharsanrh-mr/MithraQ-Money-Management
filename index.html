@@ -2015,6 +2015,8 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
     </div>
     <div class="settings-action-grid" id="appLockActions" hidden>
       <button class="settings-action" type="button" onclick="window.appLockOpenChangePin&&window.appLockOpenChangePin()"><b>🔁 Change PIN</b><small>Update your app lock PIN</small></button>
+      <button class="settings-action" type="button" onclick="window.appLockViewRecovery&&window.appLockViewRecovery()"><b>🗝️ Recovery Code</b><small>View your PIN recovery code</small></button>
+      <button class="settings-action" type="button" id="appLockBiometricBtn" onclick="window.appLockBiometricToggle&&window.appLockBiometricToggle()"><b id="appLockBiometricBtnTitle">🧬 Enable Biometric</b><small id="appLockBiometricBtnSub">Use fingerprint or Face ID to unlock</small></button>
       <button class="settings-action" type="button" onclick="window.appLockNow&&window.appLockNow()"><b>🔒 Lock Now</b><small>Lock the app immediately</small></button>
     </div>
   </div>
@@ -5192,8 +5194,34 @@ function ensureData(){
   if(typeof d==='undefined'||!d) return false;
   if(typeof d.appLockEnabled!=='boolean') d.appLockEnabled=false;
   if(typeof d.appLockPin!=='string') d.appLockPin='';
+  if(typeof d.appLockRecoveryCode!=='string') d.appLockRecoveryCode='';
+  if(typeof d.appLockBiometricEnabled!=='boolean') d.appLockBiometricEnabled=false;
+  if(typeof d.appLockBiometricCredId!=='string') d.appLockBiometricCredId='';
   return true;
 }
+function bufToB64u(buf){ const bytes=new Uint8Array(buf); let bin=''; for(let i=0;i<bytes.length;i++) bin+=String.fromCharCode(bytes[i]); return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function b64uToBuf(b64u){ const pad='='.repeat((4-b64u.length%4)%4); const b64=(b64u+pad).replace(/-/g,'+').replace(/_/g,'/'); const bin=atob(b64); const buf=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) buf[i]=bin.charCodeAt(i); return buf.buffer; }
+function randomBytes(len){ const a=new Uint8Array(len); if(window.crypto&&crypto.getRandomValues) crypto.getRandomValues(a); else for(let i=0;i<len;i++) a[i]=Math.floor(Math.random()*256); return a; }
+function biometricSupported(){ return !!(window.PublicKeyCredential && navigator.credentials && navigator.credentials.create && navigator.credentials.get); }
+async function biometricPlatformAvailable(){ try{ if(!biometricSupported()) return false; return await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable(); }catch(e){ return false; } }
+let bioSupportChecked=false;
+async function checkBioSupport(){
+  const ok=await biometricPlatformAvailable();
+  bioSupportChecked=true;
+  const btn=document.getElementById('appLockBiometricBtn');
+  if(btn) btn.style.display = ok ? '' : 'none';
+  if(!ok && ensureData() && d.appLockBiometricEnabled){ d.appLockBiometricEnabled=false; d.appLockBiometricCredId=''; persist(); }
+}
+function genRecoveryCode(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out='';
+  for(let g=0; g<3; g++){
+    if(g>0) out+='-';
+    for(let i=0;i<4;i++) out+=chars[Math.floor(Math.random()*chars.length)];
+  }
+  return out;
+}
+function normCode(v){ return String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,''); }
 function esc3(v){ const e=document.createElement('div'); e.textContent=String(v??''); return e.innerHTML; }
 function persist(){ try{ if(typeof save==='function'){ save(); return; } }catch(e){} try{ if(typeof mqPersist==='function') mqPersist(); }catch(e){} }
 
@@ -5214,6 +5242,7 @@ function lockScreenHtml(){
     +'<p>Enter your PIN to continue</p>'
     +'<div class="app-lock-dots" id="appLockDots">'+dotsHtml(len)+'</div>'
     +'<div class="app-lock-error" id="appLockError"></div>'
+    +(d.appLockBiometricEnabled ? '<button type="button" class="app-lock-forgot" style="margin:0 0 12px" onclick="window.appLockTryBiometric()">🧬 Use Biometric</button>' : '')
     +'<div class="app-lock-keypad">'
     +keys.map(function(k){
         if(k==='') return '<span></span>';
@@ -5224,25 +5253,62 @@ function lockScreenHtml(){
     +'<button type="button" class="app-lock-forgot" onclick="window.appLockShowForgot()">Forgot PIN?</button>'
     +'</div>';
 }
-function forgotConfirmHtml(){
+function forgotRecoveryHtml(){
+  const brand=(typeof d!=='undefined'&&d.brandName)?d.brandName:'MithraQ';
+  return '<div class="app-lock-card">'
+    +'<div class="app-lock-icon">🗝️</div>'
+    +'<h3>Enter Recovery Code</h3>'
+    +'<p>Enter the recovery code you saved when you set up App Lock for '+esc3(brand)+'.</p>'
+    +'<input id="appLockRecoveryInput" type="text" autocapitalize="characters" autocomplete="off" placeholder="XXXX-XXXX-XXXX" style="width:100%;padding:13px;border-radius:12px;border:1px solid #e4deed;font-size:16px;letter-spacing:2px;text-align:center;text-transform:uppercase">'
+    +'<div class="app-lock-error" id="appLockForgotError"></div>'
+    +'<div class="app-lock-forgot-actions">'
+    +'<button type="button" class="app-lock-forgot-cancel" onclick="window.appLockCancelForgot()">Cancel</button>'
+    +'<button type="button" class="app-lock-forgot-confirm" onclick="window.appLockVerifyRecovery()" style="background:linear-gradient(135deg,#6d28d9,#ec4899)">Verify</button>'
+    +'</div>'
+    +'<button type="button" class="app-lock-forgot" onclick="window.appLockShowNoCode()">I don\'t have my recovery code</button>'
+    +'</div>';
+}
+function forgotNoCodeHtml(){
   const brand=(typeof d!=='undefined'&&d.brandName)?d.brandName:'MithraQ';
   return '<div class="app-lock-card">'
     +'<div class="app-lock-icon">⚠️</div>'
-    +'<h3>Forgot your PIN?</h3>'
-    +'<p>Turning off App Lock will open '+esc3(brand)+' right away without asking for a PIN. You can set a new PIN anytime from Settings.</p>'
+    +'<h3>No recovery code?</h3>'
+    +'<p>Without your recovery code, the only option is to turn off App Lock. '+esc3(brand)+' will open right away without asking for a PIN. You can set a new PIN and recovery code anytime from Settings.</p>'
     +'<div class="app-lock-forgot-actions">'
-    +'<button type="button" class="app-lock-forgot-cancel" onclick="window.appLockCancelForgot()">Cancel</button>'
+    +'<button type="button" class="app-lock-forgot-cancel" onclick="window.appLockShowForgot()">Back</button>'
     +'<button type="button" class="app-lock-forgot-confirm" onclick="window.appLockResetConfirmed()">Turn Off App Lock</button>'
     +'</div></div>';
 }
 window.appLockShowForgot=function(){
+  if(!ensureData()) return;
   const ov=document.getElementById('appLockScreen'); if(!ov) return;
-  ov.innerHTML=forgotConfirmHtml();
+  if(d.appLockRecoveryCode){ ov.innerHTML=forgotRecoveryHtml(); setTimeout(function(){ const i=document.getElementById('appLockRecoveryInput'); if(i) i.focus(); },50); }
+  else { ov.innerHTML=forgotNoCodeHtml(); }
+};
+window.appLockShowNoCode=function(){
+  const ov=document.getElementById('appLockScreen'); if(!ov) return;
+  ov.innerHTML=forgotNoCodeHtml();
+};
+window.appLockVerifyRecovery=function(){
+  if(!ensureData()) return;
+  const input=document.getElementById('appLockRecoveryInput');
+  const err=document.getElementById('appLockForgotError');
+  const entered=normCode(input?input.value:'');
+  const stored=normCode(d.appLockRecoveryCode);
+  if(!entered){ if(err) err.textContent='Enter your recovery code'; return; }
+  if(entered!==stored){
+    if(err) err.textContent='That code doesn\'t match. Try again.';
+    const card=document.querySelector('#appLockScreen .app-lock-card');
+    if(card){ card.classList.remove('app-lock-shake'); void card.offsetWidth; card.classList.add('app-lock-shake'); }
+    return;
+  }
+  hideLockScreen();
+  openSetupModal('reset');
 };
 window.appLockCancelForgot=function(){ showLockScreen(); };
 window.appLockResetConfirmed=function(){
   if(!ensureData()) return;
-  d.appLockEnabled=false; d.appLockPin='';
+  d.appLockEnabled=false; d.appLockPin=''; d.appLockRecoveryCode=''; d.appLockBiometricEnabled=false; d.appLockBiometricCredId='';
   persist();
   hideLockScreen();
   updateSettingsUI();
@@ -5256,6 +5322,7 @@ function showLockScreen(){
   ov.innerHTML=lockScreenHtml();
   ov.classList.add('show'); ov.setAttribute('aria-hidden','false');
   document.body.classList.add('app-locked');
+  if(d.appLockBiometricEnabled) setTimeout(function(){ window.appLockTryBiometric(); },350);
 }
 function hideLockScreen(){
   const ov=document.getElementById('appLockScreen');
@@ -5280,9 +5347,60 @@ window.appLockKey=function(k){
   pinBuffer+=k; renderDots(); tryUnlock();
 };
 window.appLockNow=function(){ showLockScreen(); };
+window.appLockBiometricToggle=async function(){
+  if(!ensureData()) return;
+  if(d.appLockBiometricEnabled){
+    d.appLockBiometricEnabled=false; d.appLockBiometricCredId='';
+    persist();
+    if(typeof backupNotice==='function') backupNotice('Biometric Unlock Off','You will unlock with your PIN now.','🧬');
+    updateSettingsUI();
+    return;
+  }
+  if(!d.appLockEnabled || !d.appLockPin){
+    if(typeof backupNotice==='function') backupNotice('Set a PIN First','Turn on App Lock with a PIN before enabling biometric unlock.','⚠️');
+    return;
+  }
+  if(!(await biometricPlatformAvailable())){
+    if(typeof backupNotice==='function') backupNotice('Not Available','Biometric unlock isn\'t available on this device or browser.','⚠️');
+    return;
+  }
+  try{
+    const brand=(typeof d!=='undefined'&&d.brandName)?d.brandName:'MithraQ';
+    const cred=await navigator.credentials.create({publicKey:{
+      challenge:randomBytes(32),
+      rp:{name:brand},
+      user:{id:randomBytes(16), name:'mithraq-user', displayName:brand+' User'},
+      pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
+      authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required',residentKey:'preferred'},
+      timeout:60000,
+      attestation:'none'
+    }});
+    if(!cred || !cred.rawId) throw new Error('no credential');
+    d.appLockBiometricCredId=bufToB64u(cred.rawId);
+    d.appLockBiometricEnabled=true;
+    persist();
+    if(typeof backupNotice==='function') backupNotice('Biometric Unlock On','You can now unlock with fingerprint or Face ID.','🧬');
+  }catch(err){
+    if(typeof backupNotice==='function') backupNotice('Couldn\'t Enable','Biometric setup was cancelled or failed.','⚠️');
+  }
+  updateSettingsUI();
+};
+window.appLockTryBiometric=async function(){
+  if(!ensureData()) return;
+  if(!d.appLockBiometricEnabled || !d.appLockBiometricCredId) return;
+  try{
+    const assertion=await navigator.credentials.get({publicKey:{
+      challenge:randomBytes(32),
+      allowCredentials:[{id:b64uToBuf(d.appLockBiometricCredId), type:'public-key'}],
+      userVerification:'required',
+      timeout:60000
+    }});
+    if(assertion){ hideLockScreen(); pinBuffer=''; }
+  }catch(e){ /* cancelled or failed - stay on PIN screen */ }
+};
 
 function pinSetupHtml(mode){
-  const title = mode==='change' ? 'Change PIN' : 'Set App Lock PIN';
+  const title = mode==='change' ? 'Change PIN' : (mode==='reset' ? 'Set a New PIN' : 'Set App Lock PIN');
   return '<div class="backup-ui-box">'
     +'<div class="backup-ui-icon">🔒</div><h3>'+title+'</h3>'
     +'<p>Choose a 4-digit PIN you will use to unlock '+esc3((typeof d!=='undefined'&&d.brandName)?d.brandName:'MithraQ')+'.</p>'
@@ -5305,6 +5423,21 @@ window.appLockCancelSetup=function(){
   if(m){ m.classList.remove('show'); m.innerHTML=''; m.setAttribute('aria-hidden','true'); }
   updateSettingsUI();
 };
+function recoveryCodeHtml(code, closeLabel){
+  const brand=(typeof d!=='undefined'&&d.brandName)?d.brandName:'MithraQ';
+  return '<div class="backup-ui-box">'
+    +'<div class="backup-ui-icon">🗝️</div><h3>Your Recovery Code</h3>'
+    +'<p>Save this code somewhere safe. If you ever forget your '+esc3(brand)+' PIN, you\'ll need it to set a new one.</p>'
+    +'<div style="font-size:20px;font-weight:800;letter-spacing:2px;text-align:center;background:#f6f2fd;border-radius:12px;padding:16px;color:#4c1d95">'+esc3(code)+'</div>'
+    +'<div class="backup-ui-actions one">'
+    +'<button type="button" class="backup-ui-primary" onclick="window.appLockCloseRecoveryDisplay()">'+esc3(closeLabel||'I\'ve Saved It')+'</button>'
+    +'</div></div>';
+}
+window.appLockCloseRecoveryDisplay=function(){
+  const m=document.getElementById('backupUiModal');
+  if(m){ m.classList.remove('show'); m.innerHTML=''; m.setAttribute('aria-hidden','true'); }
+  updateSettingsUI();
+};
 window.appLockConfirmSetup=function(mode){
   const p1=(document.getElementById('appLockPinInput1')||{}).value||'';
   const p2=(document.getElementById('appLockPinInput2')||{}).value||'';
@@ -5312,16 +5445,36 @@ window.appLockConfirmSetup=function(mode){
   if(!/^\d{4,6}$/.test(p1)){ if(err) err.textContent='PIN must be 4-6 digits'; return; }
   if(p1!==p2){ if(err) err.textContent='PINs do not match'; return; }
   d.appLockPin=p1; d.appLockEnabled=true;
+  let newCode='';
+  if(mode==='enable' || mode==='reset' || !d.appLockRecoveryCode){
+    newCode=genRecoveryCode();
+    d.appLockRecoveryCode=newCode;
+  }
   persist();
-  window.appLockCancelSetup();
-  if(typeof backupNotice==='function') backupNotice('App Lock '+(mode==='change'?'Updated':'Enabled'), mode==='change'?'Your PIN has been updated.':'MithraQ will now ask for your PIN when you open the app.','🔒');
+  if(newCode){
+    const m=document.getElementById('backupUiModal');
+    if(m){ m.innerHTML=recoveryCodeHtml(newCode); m.classList.add('show'); m.setAttribute('aria-hidden','false'); }
+  } else {
+    window.appLockCancelSetup();
+  }
+  if(typeof backupNotice==='function') backupNotice('App Lock '+(mode==='change'?'Updated':(mode==='reset'?'PIN Reset':'Enabled')), mode==='change'?'Your PIN has been updated.':(mode==='reset'?'Your new PIN is set.':'MithraQ will now ask for your PIN when you open the app.'),'🔒');
   updateSettingsUI();
 };
 window.appLockOpenChangePin=function(){ openSetupModal('change'); };
+window.appLockViewRecovery=function(){
+  if(!ensureData()) return;
+  const m=document.getElementById('backupUiModal'); if(!m) return;
+  if(!d.appLockEnabled || !d.appLockRecoveryCode){
+    if(typeof backupNotice==='function') backupNotice('No Recovery Code','Turn on App Lock first to get a recovery code.','🗝️');
+    return;
+  }
+  m.innerHTML=recoveryCodeHtml(d.appLockRecoveryCode, 'Close');
+  m.classList.add('show'); m.setAttribute('aria-hidden','false');
+};
 window.appLockToggleClick=function(){
   if(!ensureData()) return;
   if(d.appLockEnabled){
-    d.appLockEnabled=false; d.appLockPin='';
+    d.appLockEnabled=false; d.appLockPin=''; d.appLockRecoveryCode=''; d.appLockBiometricEnabled=false; d.appLockBiometricCredId='';
     persist();
     if(typeof backupNotice==='function') backupNotice('App Lock Disabled','MithraQ will open without a PIN now.','🔓');
     updateSettingsUI();
@@ -5337,12 +5490,17 @@ function updateSettingsUI(){
   if(title) title.textContent = d.appLockEnabled ? 'App Lock is On' : 'App Lock is Off';
   if(text) text.textContent = d.appLockEnabled ? 'Tap to turn off app lock.' : 'Turn on to require a PIN every time you open MithraQ.';
   if(actions) actions.hidden = !d.appLockEnabled;
+  const bioTitle=document.getElementById('appLockBiometricBtnTitle');
+  const bioSub=document.getElementById('appLockBiometricBtnSub');
+  if(bioTitle) bioTitle.textContent = d.appLockBiometricEnabled ? '🧬 Biometric Unlock: On' : '🧬 Enable Biometric';
+  if(bioSub) bioSub.textContent = d.appLockBiometricEnabled ? 'Tap to turn off' : 'Use fingerprint or Face ID to unlock';
 }
 
 ready(function(){
   ensureData();
   showLockScreen();
   updateSettingsUI();
+  checkBioSupport();
   const r=window.render;
   if(typeof r==='function'){
     window.render=function(){ const out=r.apply(this,arguments); updateSettingsUI(); return out; };
