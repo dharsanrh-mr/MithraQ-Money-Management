@@ -1610,7 +1610,7 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
 <body>
 <div id="appLockScreen" class="app-lock-overlay" aria-hidden="true"></div>
 <aside class="sidebar"><div class="logo"><div class="logoicon">₹</div><div><b>Mithra</b><small>Expenses Tracker</small></div></div><nav>
-<div class="nav-group"><div class="nav-group-title">💰 Money</div><button class="active" data-page="home">🏠 <span>Home</span></button><button data-page="moneyhub">💼 <span>Money Hub</span></button><button data-page="expenses">💸 <span>Expenses</span></button><button data-page="salary">💰 <span>Salary</span></button><button data-page="emi">💳 <span>EMI</span></button><button data-page="loan">🏦 <span>Loan</span></button></div><div class="nav-group"><div class="nav-group-title">🎯 Planning</div><button data-page="goal">🎯 <span>Goals</span></button><button data-page="chitfund">👥 <span>Chit Fund</span></button><button data-page="roomrent">🏠 <span>Room Rent</span></button><button data-page="budget">💳 <span>Budget</span></button><button data-page="moneycalendar">📅 <span>Money Calendar</span></button><button data-page="cashflow">📈 <span>Cash Flow Forecast</span></button></div><div class="nav-group"><div class="nav-group-title">📊 Insights</div><button data-page="reports">📊 <span>Reports</span></button><button data-page="moneycoach">🧠 <span>Money Coach</span></button><button data-page="alerts">🔔 <span>Alerts</span></button></div><div class="nav-group"><div class="nav-group-title">📁 Personal File</div><button data-page="personalfile">🗂️ <span>Document Vault</span></button></div></nav>
+<div class="nav-group"><div class="nav-group-title">💰 Money</div><button class="active" data-page="home">🏠 <span>Home</span></button><button data-page="moneyhub">💼 <span>Money Hub</span></button><button data-page="expenses">💸 <span>Expenses</span></button><button data-page="salary">💰 <span>Salary</span></button><button data-page="emi">💳 <span>EMI</span></button><button data-page="loan">🏦 <span>Loan</span></button></div><div class="nav-group"><div class="nav-group-title">🎯 Planning</div><button data-page="goal">🎯 <span>Goals</span></button><button data-page="chitfund">👥 <span>Chit Fund</span></button><button data-page="roomrent">🏠 <span>Room Rent</span></button><button data-page="budget">💳 <span>Budget</span></button><button data-page="moneycalendar">📅 <span>Money Calendar</span></button><button data-page="cashflow">📈 <span>Cash Flow Forecast</span></button><button data-page="subscriptions">🔁 <span>Subscriptions</span></button></div><div class="nav-group"><div class="nav-group-title">📊 Insights</div><button data-page="reports">📊 <span>Reports</span></button><button data-page="moneycoach">🧠 <span>Money Coach</span></button><button data-page="alerts">🔔 <span>Alerts</span></button></div><div class="nav-group"><div class="nav-group-title">📁 Personal File</div><button data-page="personalfile">🗂️ <span>Document Vault</span></button></div></nav>
 <div class="mobile-bottom-actions" aria-label="Bottom navigation">
 <button class="mobile-quick" data-bottom-page="home" onclick="go('home')" aria-label="Home">🏠<span>Home</span></button>
 <button class="mobile-quick mobile-quick-extra" data-bottom-page="expenses" onclick="go('expenses')" aria-label="Expenses">💸<span>Expenses</span></button>
@@ -1650,6 +1650,7 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
       <button onclick="mobileGo('moneycalendar')"><div class="menu-icon">📅</div><span>Money Calendar</span></button>
       <button onclick="mobileGo('cashflow')"><div class="menu-icon">📈</div><span>Cash Flow</span></button>
       <button onclick="mobileGo('budget')"><div class="menu-icon">💳</div><span>Budget</span><i class="menu-badge menu-budget-badge" id="menuBudgetBadge" hidden>!</i></button>
+      <button onclick="mobileGo('subscriptions')"><div class="menu-icon">🔁</div><span>Subscriptions</span><i class="menu-badge" id="menuSubBadge" hidden>0</i></button>
     </div>
   </section>
   <section class="mobile-menu-section mobile-menu-section-insights">
@@ -1936,6 +1937,22 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
   <div class="cf-kpis"><div class="cf-kpi in"><small>Total Income</small><b id="cfIncome">₹0</b><span>Expected</span></div><div class="cf-kpi out"><small>Total Expenses</small><b id="cfExpense">₹0</b><span>Expected</span></div><div class="cf-kpi net"><small>Net Cash Flow</small><b id="cfNet">₹0</b><span id="cfNetLabel">Surplus</span></div><div class="cf-kpi proj"><small>Projected Month End</small><b id="cfEnd">₹0</b><span>Balance</span></div></div>
   <div class="cf-layout"><div class="mc-card"><div class="cf-chart-head"><h3>Daily Balance Forecast</h3><div><span>━ Actual</span><span>┄ Projected</span></div></div><div id="cfChart" class="cf-chart"></div><div class="cf-note">ⓘ Projected balance is an estimate based on your scheduled transactions and commitments.</div></div><div class="mc-card"><div class="cf-event-head"><h3>Upcoming Cash Flow</h3><span id="cfUpcomingCount">0</span></div><div id="cfUpcoming"></div></div></div>
 </div></section>
+<section class="page" id="subscriptions">
+<div class="title"><div><small>PLANNING</small><h2>🔁 Subscriptions</h2></div><button class="add" type="button" onclick="subOpenAdd()">＋ Add Subscription</button></div>
+<div class="stats" id="subStats">
+  <div class="stat"><small>Monthly Cost</small><b id="subMonthlyCost">₹0</b></div>
+  <div class="stat"><small>Yearly Cost</small><b id="subYearlyCost">₹0</b></div>
+  <div class="stat"><small>Active Subscriptions</small><b id="subActiveCount">0</b></div>
+</div>
+<div class="card" style="margin-bottom:15px">
+  <div class="head"><h3>Next Renewals</h3><span class="muted" id="subNextCount">0 in next 7 days</span></div>
+  <div id="subUpcomingList"></div>
+</div>
+<div class="card">
+  <div class="head"><h3>All Subscriptions</h3><span class="muted" id="subTotalCount">0 total</span></div>
+  <div id="subList"></div>
+</div>
+</section>
 <section class="page" id="moneycoach">
 <div class="mc-coach-wrap">
   <div class="mc-coach-head"><div><small>YOUR PERSONAL MONEY GUIDE</small><h2>🧠 MithraQ Money Coach</h2><p id="coachGreeting">A simple plan for your money, based on what you track.</p></div><button class="mc-coach-refresh" onclick="renderMoneyCoach()">↻ Refresh</button></div>
@@ -2233,7 +2250,7 @@ function go(p,fromHistory=false){
   $$('nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));
   $$('.mobile-bottom-actions [data-bottom-page]').forEach(x=>x.classList.toggle('active',x.dataset.bottomPage===p));
   const fab=$("#globalFab");if(fab)fab.style.display=p==="home"?"none":"block";
-  if(p==="budget")renderBudgetDashboard();if(p==="reports")updateReports();if(p==="personalfile")renderPersonalFiles();if(p==="roomrent")roomRentRender();if(p==="alerts")renderAlerts();if(p==="moneycalendar")renderMoneyCalendar();if(p==="cashflow")renderCashFlow();
+  if(p==="budget")renderBudgetDashboard();if(p==="reports")updateReports();if(p==="personalfile")renderPersonalFiles();if(p==="roomrent")roomRentRender();if(p==="alerts")renderAlerts();if(p==="moneycalendar")renderMoneyCalendar();if(p==="cashflow")renderCashFlow();if(p==="subscriptions")renderSubscriptions();
 }
 function setupMithraBackNavigation(){
   let initial=window.__mithraRequestedPage||'';
@@ -2248,7 +2265,7 @@ function setupMithraBackNavigation(){
     $$('.page').forEach(x=>x.classList.toggle('active',x.id===p));
     $$('nav button').forEach(x=>x.classList.toggle('active',x.dataset.page===p));
     $$('.mobile-bottom-actions [data-bottom-page]').forEach(x=>x.classList.toggle('active',x.dataset.bottomPage===p));
-    const fab=$('#globalFab');if(fab)fab.style.display=p==='home'?'none':'block';if(p==='personalfile')renderPersonalFiles();
+    const fab=$('#globalFab');if(fab)fab.style.display=p==='home'?'none':'block';if(p==='personalfile')renderPersonalFiles();if(p==='subscriptions')renderSubscriptions();
   }
   try{history.replaceState({mithraPage:initial},'',location.pathname+location.search+'#'+initial)}catch(e){location.hash=initial}
   mithraHistoryReady=true;
@@ -4282,7 +4299,7 @@ function saveBranding(){
   save();
 }
 ;
-function render(){updateMobileMenu();renderAlerts();renderPersonalFiles();renderHomePlanning();checkSmartNotifications();initBudgetSetting();initExpenseTools();renderGoals();roomRentRender();renderMoneyHub();initMoneyPlanning();let m=new Date().toISOString().slice(0,7),inc=d.salary.reduce((a,x)=>a+x.amount,0),exp=d.expenses.filter(x=>(x.date||"").startsWith(m)).reduce((a,x)=>a+x.amount,0);$("#balance").textContent=money(inc-exp);$("#income").textContent=money(inc);$("#expense").textContent=money(exp);$("#income2").textContent=money(inc);$("#expense2").textContent=money(exp);$("#savings").textContent=money(inc-exp);$("#month").textContent=m;
+function render(){updateMobileMenu();renderAlerts();renderPersonalFiles();renderHomePlanning();checkSmartNotifications();initBudgetSetting();initExpenseTools();renderGoals();roomRentRender();renderMoneyHub();initMoneyPlanning();renderSubscriptions();let m=new Date().toISOString().slice(0,7),inc=d.salary.reduce((a,x)=>a+x.amount,0),exp=d.expenses.filter(x=>(x.date||"").startsWith(m)).reduce((a,x)=>a+x.amount,0);$("#balance").textContent=money(inc-exp);$("#income").textContent=money(inc);$("#expense").textContent=money(exp);$("#income2").textContent=money(inc);$("#expense2").textContent=money(exp);$("#savings").textContent=money(inc-exp);$("#month").textContent=m;
 renderMobileDashboard(m,inc,exp);
 renderBranding();
 let cats={};d.expenses.filter(x=>(x.date||"").startsWith(m)).forEach(x=>cats[x.category||"Other"]=(cats[x.category||"Other"]||0)+x.amount);let mx=Math.max(1,...Object.values(cats));$("#chart").innerHTML=Object.entries(cats).map(([k,v])=>'<div class="barcol"><div class="barwrap"><i class="bar" style="height:'+Math.max(5,v/mx*115)+'px"></i></div>'+k+'</div>').join("")||'<span class="muted">No expenses this month</span>';
@@ -5199,6 +5216,91 @@ function mcRenderEventList(events){const el=document.getElementById('mcEvents');
 function mcMove(n){const sel=document.getElementById('mcMonth');if(!sel)return;let [y,m]=sel.value.split('-').map(Number);if(!Number.isFinite(y)||!Number.isFinite(m)){const now=new Date();y=now.getFullYear();m=now.getMonth()+1}const z=new Date(y,m-1+n,1),v=z.toISOString().slice(0,7);if(![...sel.options].some(o=>o.value===v)){const opt=document.createElement('option');opt.value=v;opt.textContent=z.toLocaleString('en-IN',{month:'long',year:'numeric'});sel.appendChild(opt)}sel.value=v;renderMoneyCalendar()}function mcToday(){const now=new Date(),v=now.toISOString().slice(0,7),ds=v+'-'+String(now.getDate()).padStart(2,'0'),sel=document.getElementById('mcMonth');if(sel){if(![...sel.options].some(o=>o.value===v)){const opt=document.createElement('option');opt.value=v;opt.textContent=now.toLocaleString('en-IN',{month:'long',year:'numeric'});sel.appendChild(opt)}sel.value=v}renderMoneyCalendar();mcSelectDay(ds)}
 function cfMonths(){return mcMonths().concat([]).sort()}
 function renderCashFlow(){const sel=document.getElementById('cfMonth');if(!sel)return;mcFillSelect('cfMonth');const val=sel.value||new Date().toISOString().slice(0,7),events=mcEvents().filter(e=>e.date.startsWith(val));const [y,m]=val.split('-').map(Number),days=new Date(y,m,0).getDate();const startBalance=(d.accounts||[]).length?(d.accounts||[]).reduce((s,x)=>s+(Number(x.balance)||0),0):(d.salary||[]).reduce((s,x)=>s+(Number(x.amount)||0),0)-(d.expenses||[]).reduce((s,x)=>s+(Number(x.amount)||0),0);let balance=startBalance, income=0,expense=0;events.forEach(e=>{if(e.type==='in')income+=e.amount;else expense+=e.amount});const todayMonth=new Date().toISOString().slice(0,7);let projected=startBalance;const series=[];for(let day=1;day<=days;day++){const ds=val+'-'+String(day).padStart(2,'0');events.filter(e=>e.date===ds).forEach(e=>projected+=(e.type==='in'?e.amount:-e.amount));if(val<todayMonth||val===todayMonth&&day<=new Date().getDate())balance=projected;series.push({day,value:projected,actual:val<todayMonth||day<=new Date().getDate()})}const end=projected,net=income-expense;document.getElementById('cfIncome').textContent=money(income);document.getElementById('cfExpense').textContent=money(expense);document.getElementById('cfNet').textContent=money(net);document.getElementById('cfNetLabel').textContent=net>=0?'Surplus':'Deficit';document.getElementById('cfEnd').textContent=money(end);const max=Math.max(...series.map(x=>x.value),1),min=Math.min(...series.map(x=>x.value),0),range=Math.max(1,max-min);document.getElementById('cfChart').innerHTML=series.map(x=>`<div class="cf-col"><div class="cf-bar" style="height:${Math.max(4,((x.value-min)/range)*92+4)}%"></div>${x.day===1||x.day===7||x.day===14||x.day===21||x.day===28||x.day===days?`<small>${x.day} ${new Date(y,m-1,x.day).toLocaleString('en-IN',{month:'short'})}</small>`:''}${x.day===new Date().getDate()&&val===todayMonth?'<span class="cf-label">Today</span>':''}</div>`).join('');const future=events.filter(e=>{const ds=new Date(e.date+'T00:00:00'),today=new Date();today.setHours(0,0,0,0);return ds>=today}).slice(0,10);document.getElementById('cfUpcomingCount').textContent=future.length+' upcoming';let run=startBalance;document.getElementById('cfUpcoming').innerHTML=future.length?future.map(e=>{run+=(e.type==='in'?e.amount:-e.amount);return `<div class="cf-row"><span class="cf-row-icon">${e.icon}</span><div class="cf-row-main"><b>${esc(e.title)}</b><small>${e.date} • ${esc(e.meta)}</small></div><div class="cf-row-amt"><b class="mc-amt ${e.type}">${e.type==='in'?'+':'-'}${money(e.amount)}</b><small>Balance ${money(run)}</small></div></div>`}).join(''):'<div class="cf-empty">No upcoming dated transactions. Add salary, expenses, EMI or reminders to build your forecast.</div>'}
+
+function subMonthlyAmount(x){const amt=Number(x.amount)||0,cyc=x.cycle||"monthly";if(cyc==="weekly")return amt*4.345;if(cyc==="quarterly")return amt/3;if(cyc==="yearly")return amt/12;return amt}
+function subNextDate(x){
+  const start=x.startDate?new Date(x.startDate+"T00:00:00"):new Date();
+  if(isNaN(start))return null;
+  const cyc=x.cycle||"monthly";let next=new Date(start);const today=new Date();today.setHours(0,0,0,0);
+  if(cyc==="monthly"||cyc==="quarterly"){
+    const step=cyc==="quarterly"?3:1;
+    while(next<today){next=new Date(next.getFullYear(),next.getMonth()+step,next.getDate())}
+  }else if(cyc==="yearly"){
+    while(next<today){next=new Date(next.getFullYear()+1,next.getMonth(),next.getDate())}
+  }else{
+    const days=cyc==="weekly"?7:30;
+    while(next<today){next=new Date(next.getTime()+days*86400000)}
+  }
+  return next.toISOString().slice(0,10)
+}
+function subDaysUntil(ds){if(!ds)return 9999;const t=new Date();t.setHours(0,0,0,0);const target=new Date(ds+"T00:00:00");return Math.round((target-t)/86400000)}
+function subCycleLabel(c){return c==="weekly"?"Weekly":c==="quarterly"?"Quarterly":c==="yearly"?"Yearly":"Monthly"}
+const SUB_ICONS=["🎬","🎵","📦","🛒","💪","☁️","📰","🎮","📱","💊","🧾","🔁"];
+function subRow(x,opts){
+  opts=opts||{};const next=subNextDate(x),days=subDaysUntil(next);
+  const dueTxt=days<0?"Overdue":days===0?"Due today":days===1?"Due tomorrow":("Due in "+days+" days");
+  const urgent=days<=3;
+  return '<div class="row"><div><b>'+(x.icon||"🔁")+' '+esc(x.name||"Subscription")+'</b><div class="muted">'+esc(x.category||"Other")+'</div></div><div class="muted">'+subCycleLabel(x.cycle)+'</div><div style="'+(urgent?'color:#e11d48;font-weight:800':'')+'">'+(opts.showDue!==false?dueTxt:(x.active===false?'Paused':'Active'))+'</div><div class="amount">'+money(x.amount)+(opts.actions!==false?('<div style="display:flex;gap:6px;margin-top:6px;justify-content:flex-end"><button class="link" type="button" onclick="subOpenAdd(\''+String(x.id)+'\')">Edit</button><button class="link" type="button" style="color:#e11d48" onclick="subDelete(\''+String(x.id)+'\')">Delete</button></div>'):'')+'</div></div>'
+}
+function renderSubscriptions(){
+  const list=document.getElementById("subList");if(!list)return;
+  const all=Array.isArray(d.subscriptions)?d.subscriptions:[];
+  const active=all.filter(x=>x.active!==false);
+  const monthlyCost=active.reduce((a,x)=>a+subMonthlyAmount(x),0);
+  document.getElementById("subMonthlyCost").textContent=money(Math.round(monthlyCost));
+  document.getElementById("subYearlyCost").textContent=money(Math.round(monthlyCost*12));
+  document.getElementById("subActiveCount").textContent=active.length;
+  document.getElementById("subTotalCount").textContent=all.length+" total";
+  const upcoming=active.map(x=>({x:x,next:subNextDate(x),days:subDaysUntil(subNextDate(x))})).filter(o=>o.days<=7&&o.days>=0).sort((a,b)=>a.days-b.days);
+  document.getElementById("subNextCount").textContent=upcoming.length+" in next 7 days";
+  document.getElementById("subUpcomingList").innerHTML=upcoming.length?upcoming.map(o=>subRow(o.x,{actions:false})).join(""):'<div class="mh-empty">No renewals in the next 7 days.</div>';
+  list.innerHTML=all.length?all.slice().sort((a,b)=>subDaysUntil(subNextDate(a))-subDaysUntil(subNextDate(b))).map(x=>subRow(x)).join(""):'<div class="mh-empty">No subscriptions added yet. Track Netflix, Prime, gym, cloud storage and more here.</div>';
+  const badge=document.getElementById("menuSubBadge");if(badge){const urgentCount=active.filter(x=>subDaysUntil(subNextDate(x))<=3).length;if(urgentCount>0){badge.hidden=false;badge.textContent=urgentCount}else badge.hidden=true}
+}
+function subOpenAdd(id){
+  const m=$("#modal");if(!m)return;
+  const editing=id?(d.subscriptions||[]).find(x=>String(x.id)===String(id)):null;
+  const iconOptions=SUB_ICONS.map(i=>'<option value="'+i+'" '+(editing&&editing.icon===i?"selected":"")+'>'+i+'</option>').join("");
+  m.innerHTML='<form onsubmit="subSave(event,\''+(id||"")+'\')"><button type="button" class="close" onclick="closeForm()">×</button><h3>'+(editing?"Edit":"＋ Add")+' Subscription</h3>'+
+  '<input name="name" placeholder="Name (e.g. Netflix)" maxlength="60" required value="'+(editing?esc(editing.name||""):"")+'">'+
+  '<input name="category" placeholder="Category (e.g. Entertainment)" maxlength="40" value="'+(editing?esc(editing.category||""):"")+'">'+
+  '<select name="icon">'+iconOptions+'</select>'+
+  '<input name="amount" type="number" step="0.01" min="0" placeholder="Amount" required value="'+(editing?editing.amount:"")+'">'+
+  '<select name="cycle">'+
+    '<option value="weekly" '+(editing&&editing.cycle==="weekly"?"selected":"")+'>Weekly</option>'+
+    '<option value="monthly" '+(!editing||editing.cycle==="monthly"?"selected":"")+'>Monthly</option>'+
+    '<option value="quarterly" '+(editing&&editing.cycle==="quarterly"?"selected":"")+'>Quarterly</option>'+
+    '<option value="yearly" '+(editing&&editing.cycle==="yearly"?"selected":"")+'>Yearly</option>'+
+  '</select>'+
+  '<label class="muted" style="display:block;margin-top:4px">Next / Start billing date</label>'+
+  '<input name="startDate" type="date" required value="'+(editing?editing.startDate:new Date().toISOString().slice(0,10))+'">'+
+  '<label class="muted" style="display:block;margin-top:4px">Remind me before due date</label>'+
+  '<select name="remindDays">'+
+    '<option value="1" '+(editing&&Number(editing.remindDays)===1?"selected":"")+'>1 day before</option>'+
+    '<option value="3" '+(!editing||Number(editing.remindDays)===3||!editing.remindDays?"selected":"")+'>3 days before</option>'+
+    '<option value="5" '+(editing&&Number(editing.remindDays)===5?"selected":"")+'>5 days before</option>'+
+    '<option value="7" '+(editing&&Number(editing.remindDays)===7?"selected":"")+'>7 days before</option>'+
+  '</select>'+
+  '<label style="display:flex;align-items:center;gap:8px;font-weight:700;color:#6f7282"><input type="checkbox" name="active" '+(!editing||editing.active!==false?"checked":"")+' style="width:auto"> Active</label>'+
+  '<button class="save">'+(editing?"Save Changes":"Add Subscription")+'</button>'+
+  (editing?'<button type="button" class="danger" onclick="subDelete(\''+String(editing.id)+'\');closeForm()">Delete Subscription</button>':"")+
+  '</form>';
+  m.classList.add("show")
+}
+function subSave(e,id){
+  e.preventDefault();const f=e.target;
+  const rec={id:id||(Date.now()+Math.random()),name:f.name.value.trim(),category:f.category.value.trim()||"Other",icon:f.icon.value,amount:Math.max(0,Number(f.amount.value)||0),cycle:f.cycle.value,startDate:f.startDate.value,remindDays:Number(f.remindDays.value)||3,active:f.active.checked};
+  d.subscriptions=Array.isArray(d.subscriptions)?d.subscriptions:[];
+  const idx=d.subscriptions.findIndex(x=>String(x.id)===String(id));
+  if(idx>-1)d.subscriptions[idx]=rec;else d.subscriptions.push(rec);
+  closeForm();mqPersist();renderSubscriptions();updateMobileMenu();
+}
+function subDelete(id){
+  if(!confirm("Delete this subscription?"))return;
+  d.subscriptions=(d.subscriptions||[]).filter(x=>String(x.id)!==String(id));
+  mqPersist();renderSubscriptions();updateMobileMenu();
+}
+
 function initMoneyPlanning(){if(document.getElementById('moneycalendar')){initMoneyCalendarControls();renderMoneyCalendar()}if(document.getElementById('cashflow'))renderCashFlow()}
 function initMoneyCalendarControls(){const root=document.getElementById('moneycalendar');if(!root||root.dataset.mcControlsBound)return;root.dataset.mcControlsBound='1';root.addEventListener('click',function(e){const btn=e.target.closest('.mc-actions button');if(!btn||!root.contains(btn))return;e.preventDefault();e.stopPropagation();if(btn===root.querySelector('.mc-actions button:first-child'))mcToday();else if(btn===root.querySelector('.mc-actions button:nth-child(2)'))mcMove(-1);else if(btn===root.querySelector('.mc-actions button:nth-child(3)'))mcMove(1)},true);root.addEventListener('pointerup',function(e){const btn=e.target.closest('.mc-actions button');if(!btn||!root.contains(btn))return;e.preventDefault();if(btn===root.querySelector('.mc-actions button:first-child'))mcToday();else if(btn===root.querySelector('.mc-actions button:nth-child(2)'))mcMove(-1);else if(btn===root.querySelector('.mc-actions button:nth-child(3)'))mcMove(1)},true)}
 
@@ -6347,7 +6449,7 @@ window.saveAppLanguage = function(){
   function moneySafe(n){try{return typeof money==='function'?money(Number(n)||0):'₹'+(Number(n)||0).toLocaleString('en-IN')}catch(e){return '₹'+(Number(n)||0).toLocaleString('en-IN')}}
   window.buildSmartAlerts=function(){
     var out=[], today=new Date(), todayStr=today.toISOString().slice(0,10), month=todayStr.slice(0,7), data=(typeof d==='object'&&d)?d:{};
-    var expenses=Array.isArray(data.expenses)?data.expenses:[], salary=Array.isArray(data.salary)?data.salary:[], emis=Array.isArray(data.emi)?data.emi:[], goals=Array.isArray(data.goals)?data.goals:[], chits=Array.isArray(data.chitfund)?data.chitfund:[], reminders=Array.isArray(data.moneyReminders)?data.moneyReminders:[], cards=Array.isArray(data.creditCards)?data.creditCards:[], rents=Array.isArray(data.roomRentBills)?data.roomRentBills:[];
+    var expenses=Array.isArray(data.expenses)?data.expenses:[], salary=Array.isArray(data.salary)?data.salary:[], emis=Array.isArray(data.emi)?data.emi:[], goals=Array.isArray(data.goals)?data.goals:[], chits=Array.isArray(data.chitfund)?data.chitfund:[], reminders=Array.isArray(data.moneyReminders)?data.moneyReminders:[], cards=Array.isArray(data.creditCards)?data.creditCards:[], rents=Array.isArray(data.roomRentBills)?data.roomRentBills:[], subs=Array.isArray(data.subscriptions)?data.subscriptions:[];
     var exp=expenses.filter(function(x){return safeDate(x.date).slice(0,7)===month}).reduce(function(a,x){return a+(Number(x.amount)||0)},0);
     var income=salary.filter(function(x){return safeDate(x.date).slice(0,7)===month}).reduce(function(a,x){return a+(Number(x.amount)||0)},0);
     var budget=Number(data.monthlyBudget)||0;
@@ -6360,6 +6462,7 @@ window.saveAppLanguage = function(){
     cards.forEach(function(x){if(!x.dueDay)return;var now=new Date(),day=Math.max(1,Math.min(31,Number(x.dueDay)||1)),dueDate=new Date(now.getFullYear(),now.getMonth(),day);if(dueDate<new Date(now.getFullYear(),now.getMonth(),now.getDate()))dueDate=new Date(now.getFullYear(),now.getMonth()+1,day);var due=dueDate.toISOString().slice(0,10),days=diffDays(due);if(days<=7&&(Number(x.used)||0)>0)out.push(A('card-'+x.id,'💳','Credit card due soon',(x.name||'Credit card')+' has '+moneySafe(x.used)+' used. Minimum due '+moneySafe(x.minimum||0)+'.','Due '+due,days<=2?'urgent':'upcoming','moneyhub','Open Money Hub'))});
     chits.forEach(function(x){var day=Number(x.dueDay)||0;if(!day)return;var now=new Date(),dueDate=new Date(now.getFullYear(),now.getMonth(),Math.min(day,28));if(dueDate<new Date(now.getFullYear(),now.getMonth(),now.getDate()))dueDate=new Date(now.getFullYear(),now.getMonth()+1,Math.min(day,28));var due=dueDate.toISOString().slice(0,10),days=diffDays(due);if(days>=0&&days<=3)out.push(A('chit-'+x.id,'👥','Chit payment due soon',(x.name||'Chit fund')+' payment is due around the '+day+'th.','Due '+due,'urgent','chitfund','Open Chit Fund'))});
     if(rents.length){var pending=0,count=0; rents.forEach(function(r){(Array.isArray(r.shares)?r.shares:[]).forEach(function(sh){if(!sh.paid){pending+=Number(sh.amount)||0;count++}})});if(pending>0)out.push(A('roomrent-pending','🏠','Room Rent payments pending',count+' member share'+(count===1?'':'s')+' totalling '+moneySafe(pending)+' still pending.','Awaiting payment','upcoming','roomrent','Open Room Rent'))}
+    subs.forEach(function(x){if(x.active===false)return;var next=(typeof subNextDate==='function')?subNextDate(x):safeDate(x.startDate),days=(typeof subDaysUntil==='function')?subDaysUntil(next):diffDays(next);var remindDays=Number(x.remindDays)||3;if(days>remindDays)return;var dueTxt=days<0?'Overdue':days===0?'Due today':days===1?'Due tomorrow':('Due in '+days+' days');out.push(A('sub-'+x.id,x.icon||'🔁','Subscription renewing soon',(x.name||'Subscription')+' ('+moneySafe(x.amount)+') is '+dueTxt.toLowerCase()+'.',dueTxt,days<=1?'urgent':'upcoming','subscriptions','Open Subscriptions'))});
     if(income<=0&&exp>0)out.push(A('income-missing','💡','No income recorded this month','You have expenses this month but no salary/income entry yet.','Add salary for a clearer money-health picture.','info','salary','Add Salary'));
     var rank={urgent:0,upcoming:1,info:2};out.sort(function(a,b){return (rank[a.level]-rank[b.level])||String(a.title).localeCompare(String(b.title))});return out;
   };
