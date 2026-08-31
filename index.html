@@ -1610,7 +1610,7 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
 <body>
 <div id="appLockScreen" class="app-lock-overlay" aria-hidden="true"></div>
 <aside class="sidebar"><div class="logo"><div class="logoicon">₹</div><div><b>Mithra</b><small>Expenses Tracker</small></div></div><nav>
-<div class="nav-group"><div class="nav-group-title">💰 Money</div><button class="active" data-page="home">🏠 <span>Home</span></button><button data-page="moneyhub">💼 <span>Money Hub</span></button><button data-page="expenses">💸 <span>Expenses</span></button><button data-page="salary">💰 <span>Salary</span></button><button data-page="emi">💳 <span>EMI</span></button><button data-page="loan">🏦 <span>Loan</span></button></div><div class="nav-group"><div class="nav-group-title">🎯 Planning</div><button data-page="goal">🎯 <span>Goals</span></button><button data-page="chitfund">👥 <span>Chit Fund</span></button><button data-page="roomrent">🏠 <span>Room Rent</span></button><button data-page="budget">💳 <span>Budget</span></button><button data-page="moneycalendar">📅 <span>Money Calendar</span></button><button data-page="cashflow">📈 <span>Cash Flow Forecast</span></button><button data-page="subscriptions">🔁 <span>Subscriptions</span></button></div><div class="nav-group"><div class="nav-group-title">📊 Insights</div><button data-page="reports">📊 <span>Reports</span></button><button data-page="moneycoach">🧠 <span>Money Coach</span></button><button data-page="alerts">🔔 <span>Alerts</span></button></div><div class="nav-group"><div class="nav-group-title">📁 Personal File</div><button data-page="personalfile">🗂️ <span>Document Vault</span></button></div></nav>
+<div class="nav-group"><div class="nav-group-title">💰 Money</div><button class="active" data-page="home">🏠 <span>Home</span></button><button data-page="moneyhub">💼 <span>Money Hub</span></button><button data-page="expenses">💸 <span>Expenses</span></button><button data-page="salary">💰 <span>Salary</span></button><button data-page="emi">💳 <span>EMI</span></button><button data-page="loan">🏦 <span>Loan</span></button></div><div class="nav-group"><div class="nav-group-title">🎯 Planning</div><button data-page="goal">🎯 <span>Goals</span></button><button data-page="chitfund">👥 <span>Chit Fund</span></button><button data-page="roomrent">🏠 <span>Room Rent</span></button><button data-page="budget">💳 <span>Budget</span></button><button data-page="moneycalendar">📅 <span>Money Calendar</span></button><button data-page="cashflow">📈 <span>Cash Flow Forecast</span></button><button data-page="subscriptions">🔁 <span>Subscriptions</span></button></div><div class="nav-group"><div class="nav-group-title">📊 Insights</div><button data-page="reports">📊 <span>Reports</span></button><button data-page="moneycoach">🧠 <span>Money Coach</span></button><button data-page="alerts">🔔 <span>Alerts</span></button></div><div class="nav-group"><div class="nav-group-title">📁 Personal File</div><button data-page="personalfile">🗂️ <span>Document Vault</span></button></div><div class="nav-group"><div class="nav-group-title">⚙️ Preferences</div><button data-page="settings">⚙️ <span>Settings</span></button></div></nav>
 <div class="mobile-bottom-actions" aria-label="Bottom navigation">
 <button class="mobile-quick" data-bottom-page="home" onclick="go('home')" aria-label="Home">🏠<span>Home</span></button>
 <button class="mobile-quick mobile-quick-extra" data-bottom-page="expenses" onclick="go('expenses')" aria-label="Expenses">💸<span>Expenses</span></button>
@@ -4279,6 +4279,14 @@ function renderBranding(){
   }else if(nameEl){nameEl.textContent=d.brandName||"MithraQ";}
   const e=document.getElementById("brandNameInput");
   if(e&&!e.matches(":focus"))e.value=d.brandName||"MithraQ";
+  const desktopWrap=document.querySelector(".top .mithra-brand.reference-image-brand");
+  if(desktopWrap){
+    const desktopImg=desktopWrap.querySelector("img");
+    if(desktopImg){
+      if(!desktopImg.dataset.defaultSrc)desktopImg.dataset.defaultSrc=desktopImg.src;
+      desktopImg.src=d.brandLogo||desktopImg.dataset.defaultSrc;
+    }
+  }
 }
 function removeBrandLogo(){
   d.brandLogo="";
@@ -5785,7 +5793,6 @@ function mq2AddSection(id, html){
 
 function mq2Init(){
   // Recurring page
-  mq2AddNavButton('recurring','Recurring','\ud83d\udd01','\ud83c\udfaf Planning');
   mq2AddSection('recurring',
     '<div class="title"><div><small>AUTOMATE</small><h2>Recurring Expenses</h2></div><button class="add" type="button" onclick="mq2OpenRecurringForm()">+ Add</button></div>'+
     '<div id="mq2RecurringForm" class="card" style="display:none">'+
