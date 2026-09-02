@@ -2761,20 +2761,17 @@ function readExpenseFile(file){
 function openSalaryPayslip(id){
   const x=d.salary.find(a=>a.id===id),r=x?.payslip;
   if(!r?.data)return;
-  const w=window.open();
-  if(!w){alert("Please allow pop-ups to view the payslip.");return}
-  if(r.type==="application/pdf"){
-    w.document.write(`<title>${esc(r.name||"Payslip")}</title><iframe src="${r.data}" style="position:fixed;inset:0;width:100%;height:100%;border:0"></iframe>`);
-    w.document.close();
-    return;
-  }
-  w.document.write(`<title>${esc(r.name||"Payslip")}</title><img src="${r.data}" style="max-width:100%;height:auto;display:block;margin:20px auto">`);
-  w.document.close();
+  personalFilePreviewSingle({name:r.name||"Payslip"},r,[r],0);
 }
 function downloadSalaryPayslip(id){
   const x=d.salary.find(a=>a.id===id),r=x?.payslip;
   if(!r?.data)return;
-  const a=document.createElement("a");a.href=r.data;a.download=r.name||"payslip";document.body.appendChild(a);a.click();a.remove();
+  try{
+    const blob=pfDataUrlToBlob(r);
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download=r.name||"payslip";a.rel="noopener";a.style.display="none";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),15000);
+  }catch(e){alert("Unable to download the payslip. Please try again.")}
 }
 function deleteSalaryPayslip(id){
   const x=d.salary.find(a=>a.id===id); if(!x?.payslip)return;
