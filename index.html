@@ -1249,6 +1249,7 @@ button#theme,
 <style id="mobile-smart-home-addons">
 @media(max-width:600px){
   .md-smart-alert{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,#fff7ed,#fff1f2);border:1px solid #fed7aa;box-shadow:0 8px 22px #7c3aed10;color:#2b2940;font-size:12px;font-weight:800}
+  .md-smart-alert[hidden]{display:none}
   .md-smart-alert::before{content:'🔔';font-size:19px}.md-smart-alert b{color:#6d28d9}
   .md-goal-main{display:flex;align-items:center;gap:12px}.md-goal-icon{width:44px;height:44px;border-radius:14px;background:#f3efff;display:grid;place-items:center;font-size:22px;flex:none}.md-goal-info{flex:1;min-width:0}.md-goal-info>b{display:block;font-size:14px}.md-goal-info>small{display:block;color:#9295a7;font-size:11px;margin:3px 0 8px}.md-goal-track{height:8px;background:#eeeaf7;border-radius:99px;overflow:hidden}.md-goal-track i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#6d28d9,#ec4899)}.md-goal-foot{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:#9295a7}.md-goal-foot b{color:#6d28d9}.md-goal .md-head button{border:0;background:none;color:#7c3aed;font-weight:800;font-size:11px}
 }
@@ -2370,7 +2371,7 @@ function openForm(type,id=null){
   }
   if(type==='salary'){
     const payslip=existing?.payslip;
-    h+='<div class="expense-file-wrap"><label>Payslip</label><input name="payslipFile" type="file" accept="image/*,.pdf"><div class="expense-file-note">Upload salary payslip image or PDF (max 3 MB).</div>';
+    h+='<div class="expense-file-wrap"><label>Payslip</label><input name="payslipFile" type="file" accept="image/*,.pdf,application/pdf"><div class="expense-file-note">Upload salary payslip image or PDF (max 3 MB).</div>';
     if(payslip?.name){
       h+='<div class="expense-attachment"><span class="expense-file-name">📎 '+esc(payslip.name)+'</span><button type="button" onclick="openSalaryPayslip('+existing.id+')">View</button><button type="button" onclick="downloadSalaryPayslip('+existing.id+')">Download</button></div>';
     }
