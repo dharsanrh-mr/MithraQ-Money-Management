@@ -5049,8 +5049,10 @@ function renderGoals(){
 function clearDataConfirmOk(){
   window.__mithraClearDataAction=null;
   closeBackupUi();
-  d={expenses:[],salary:[],emi:[],loan:[],chitfund:[],goals:[],personalFiles:[],personalFileCategories:[],currency:"₹",theme:"light",reportDefault:"daily",brandLogo:"M",brandName:"MithraQ",dashboardIcon:"🏠",dashboardHeadline:"Dashboard",language:"en"};
-  save();reportInit();
+  /* Data-protection mode: never erase the user's records. */
+  if(typeof mithraSafetySnapshot==='function') mithraSafetySnapshot("blocked-clear-all");
+  if(typeof backupNotice==='function') backupNotice("Data Protected","MithraQ is in safe mode. Your existing records were not deleted.","🛡️");
+  else alert("Data protection is enabled. Your existing records were not deleted.");
 }
 function clearData(){
   const m=document.getElementById("backupUiModal");
