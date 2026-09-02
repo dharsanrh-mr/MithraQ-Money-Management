@@ -44,6 +44,22 @@ nav{display:grid;gap:7px}nav button{border:0;background:transparent;color:#70748
 .expense-attachment button{border:0;border-radius:9px;padding:6px 9px;font-weight:800;background:#f3efff;color:#6d28d9}
 .expense-attachment .expense-file-name{font-size:11px;color:#7b7e90;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .expense-thumb{width:34px;height:34px;object-fit:cover;border-radius:7px;border:1px solid #eee7f7}
+.expense-import-types{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:2px 0}
+.expense-import-types span{background:#f3efff;color:#6d28d9;border-radius:8px;padding:4px 9px;font-size:10px;font-weight:800}
+.expense-import-status{font-size:12px;color:#7b7e90;text-align:center;min-height:14px}
+.expense-import-list{display:grid;gap:8px;max-height:280px;overflow:auto;padding-right:2px}
+.expense-import-row{display:grid;grid-template-columns:auto 1fr;gap:8px;padding:10px;border:1px solid #eee7f7;border-radius:12px;background:#faf8ff}
+.expense-import-dup{font-size:10px;font-weight:800;color:#e11d48;margin-bottom:4px}
+.expense-import-row input[type=checkbox]{width:18px;height:18px;accent-color:#7c3aed;margin-top:2px}
+.expense-import-fields{display:grid;grid-template-columns:1.3fr .8fr .95fr 1fr;gap:6px}
+.expense-import-fields input,.expense-import-fields select{padding:8px;border:1px solid #e4deed;border-radius:8px;font-size:12px;background:#fff;color:#20233a}
+.expense-import-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+.expense-import-actions label{font-size:11px;font-weight:700;color:#7b7e90;display:flex;align-items:center;gap:5px}
+.expense-import-actions>button{border:0;border-radius:11px;padding:11px 14px;font-weight:800;color:#fff;background:linear-gradient(135deg,#6d28d9,#ec4899)}
+@media(max-width:600px){.expense-import-fields{grid-template-columns:1fr 1fr}}
+.dark .expense-import-row{background:#20223a;border-color:#393c55}
+.dark .expense-import-fields input,.dark .expense-import-fields select{background:#22243a!important;color:#fff;border-color:#393c55!important}
+.dark .expense-import-types span{background:#2a2450;color:#c4a6ff}
 .dark .expense-payment-select select,.dark .expense-file-wrap input[type=file]{background:#22243a;color:#fff;border-color:#393c55}
 .dark{background:#0d0e1a;color:#eee}.dark .sidebar,.dark .card,.dark .stat,.dark .hero,.dark .report,.dark .iconbtn,.dark .modal form,.dark .chit-summary>div{background:#181a2b;color:#eee}.dark .row{border-color:#2c2e43}.dark .chit-meta div{background:#22243a}.dark input,.dark select{background:#22243a!important;color:#fff;border-color:#393c55!important}
 @media(max-width:900px){.sidebar{width:76px;padding:20px 8px}.logo div:last-child,nav span{display:none}.logo{justify-content:center;margin-bottom:25px}nav button{text-align:center;font-size:20px;padding:12px 7px}.main{margin-left:76px;padding:20px}.grid{grid-template-columns:1fr}.reportgrid{grid-template-columns:repeat(2,1fr)}.fab{display:block}}
@@ -1729,7 +1745,7 @@ body.dark .alerts-hero,body.dark .alert-card,body.dark .alerts-filter,body.dark 
   <div class="md-card md-chart"><div class="md-head"><h3>Statistics</h3><span id="mdChartMonth"></span></div><div id="mdChartBars"></div></div>
   <div class="md-two md-recent-grid"><div class="md-card"><div class="md-head"><h3>Recent Expenses</h3><button onclick="go('expenses')">See All</button></div><div id="mdRecentExpenses"></div></div><div class="md-card"><div class="md-head"><h3>Recent Income</h3><button onclick="go('salary')">See All</button></div><div id="mdRecentIncome"></div></div></div>
 </div></section>
-<section class="page" id="expenses"><div class="title"><div><small>EXPENSE-WISE LIST</small><h2>Expenses</h2></div><button class="add" onclick="openForm('expense')">Add</button></div><div class="expense-tools"><div class="expense-summary"><div class="expense-summary-card"><small>This Month</small><b id="expenseMonthTotal">₹0</b><div class="sub" id="expenseMonthSub">0 transactions</div><div class="sub expense-trend" id="expenseMonthTrend"></div></div><div class="expense-summary-card"><small>Average</small><b id="expenseAvg">₹0</b><div class="sub">per transaction</div></div></div><input id="expenseSearch" class="expense-search" type="search" placeholder="🔍 Search expense..." autocomplete="off"><div class="expense-date-range"><input id="expenseFromDate" type="date" aria-label="From date"><span>to</span><input id="expenseToDate" type="date" aria-label="To date"><button type="button" id="expenseDateClear" class="expense-date-clear" title="Clear dates" onclick="clearExpenseDateRange()">✕</button></div><div id="expenseFilters" class="expense-filters"></div><div class="expense-toolbar-row"><select id="expenseSort" class="expense-sort-select"><option value="date-desc">Newest first</option><option value="date-asc">Oldest first</option><option value="amount-desc">Amount: High to Low</option><option value="amount-asc">Amount: Low to High</option></select><button type="button" class="expense-export-btn" onclick="exportExpensesCSV()">⬇ Export CSV</button></div><div id="expenseFilterNote" class="expense-filter-note"></div></div><div id="expenseList"></div></section>
+<section class="page" id="expenses"><div class="title"><div><small>EXPENSE-WISE LIST</small><h2>Expenses</h2></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="add" type="button" onclick="openExpenseImport()">📥 Import</button><button class="add" onclick="openForm('expense')">Add</button></div></div><div class="expense-tools"><div class="expense-summary"><div class="expense-summary-card"><small>This Month</small><b id="expenseMonthTotal">₹0</b><div class="sub" id="expenseMonthSub">0 transactions</div><div class="sub expense-trend" id="expenseMonthTrend"></div></div><div class="expense-summary-card"><small>Average</small><b id="expenseAvg">₹0</b><div class="sub">per transaction</div></div></div><input id="expenseSearch" class="expense-search" type="search" placeholder="🔍 Search expense..." autocomplete="off"><div class="expense-date-range"><input id="expenseFromDate" type="date" aria-label="From date"><span>to</span><input id="expenseToDate" type="date" aria-label="To date"><button type="button" id="expenseDateClear" class="expense-date-clear" title="Clear dates" onclick="clearExpenseDateRange()">✕</button></div><div id="expenseFilters" class="expense-filters"></div><div class="expense-toolbar-row"><select id="expenseSort" class="expense-sort-select"><option value="date-desc">Newest first</option><option value="date-asc">Oldest first</option><option value="amount-desc">Amount: High to Low</option><option value="amount-asc">Amount: Low to High</option></select><button type="button" class="expense-export-btn" onclick="exportExpensesCSV()">⬇ Export CSV</button></div><div id="expenseFilterNote" class="expense-filter-note"></div></div><div id="expenseList"></div></section>
 <section class="page" id="salary">
 <div class="title"><div><small>SALARY-WISE LIST</small><h2>Salary</h2></div><button class="add" onclick="openForm('salary')">Add</button></div>
 <div class="salary-tools">
@@ -2811,6 +2827,243 @@ function openExpenseBill(id){
 function downloadExpenseBill(id){
   const x=d.expenses.find(a=>a.id===id);if(!x?.bill?.data)return;
   const a=document.createElement("a");a.href=x.bill.data;a.download=x.bill.name||"bill";document.body.appendChild(a);a.click();a.remove();
+}
+/* ===== Expense Import (Statement / Bill / PDF / Image / Excel) ===== */
+let expImportRows=[];
+function openExpenseImport(){
+  expImportRows=[];
+  $('#modal').innerHTML='<form onsubmit="return false"><button type="button" class="close" onclick="closeForm()">×</button><h3>📥 Import Expenses</h3>'
+    +'<div class="expense-file-wrap"><label>Upload Statement / Bill / PDF / Image / Excel</label>'
+    +'<input id="expImportFile" type="file" multiple accept="image/*,.pdf,application/pdf,.csv,text/csv,.xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" onchange="expenseImportHandleFiles(this)">'
+    +'<div class="expense-file-note">Bank/UPI statement, bill photo, PDF or Excel — up to 8 MB each, multiple files allowed. We read them and add matching entries to your Expenses, the same as adding them by hand. Already-added expenses (same date + amount) are auto-flagged so you don\'t add them twice.</div></div>'
+    +'<div class="expense-import-types"><span>📄 Statement</span><span>🧾 Bill</span><span>📕 PDF</span><span>🖼️ Image</span><span>📊 Excel</span></div>'
+    +'<div id="expImportStatus" class="expense-import-status"></div>'
+    +'<div id="expImportPreview"></div>'
+    +'</form>';
+  $('#modal').classList.add('show');
+}
+function expenseImportLoadScript(src,globalName){
+  return new Promise((resolve,reject)=>{
+    if(window[globalName])return resolve();
+    const existing=document.querySelector('script[data-exp-import="'+src+'"]');
+    if(existing){existing.addEventListener('load',()=>resolve());existing.addEventListener('error',()=>reject(new Error('load-failed')));return}
+    const s=document.createElement('script');s.src=src;s.async=true;s.dataset.expImport=src;
+    s.onload=()=>resolve();s.onerror=()=>reject(new Error('load-failed'));
+    document.head.appendChild(s);
+  });
+}
+function expenseImportIsDuplicate(row){
+  const amt=expenseImportNum(row.amount);
+  if(!amt||!row.date)return false;
+  return (d.expenses||[]).some(x=>x.date===row.date && Math.abs((Number(x.amount)||0)-amt)<0.01);
+}
+async function expenseImportExtractRows(file){
+  const name=(file.name||'').toLowerCase();
+  if(file.type==='text/csv'||name.endsWith('.csv')){
+    const text=await file.text();
+    return expenseImportParseDelimited(text);
+  }
+  if(name.endsWith('.xlsx')||name.endsWith('.xls')||(file.type||'').includes('spreadsheet')||(file.type||'').includes('excel')){
+    await expenseImportLoadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js','XLSX');
+    const buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:'array'}),sheet=wb.Sheets[wb.SheetNames[0]];
+    const rows=XLSX.utils.sheet_to_json(sheet,{header:1,raw:false,defval:''});
+    return expenseImportParseTable(rows);
+  }
+  if(file.type==='application/pdf'||name.endsWith('.pdf')){
+    await expenseImportLoadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js','pdfjsLib');
+    pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const buf=await file.arrayBuffer(),pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    let full='';
+    for(let p=1;p<=pdf.numPages;p++){const page=await pdf.getPage(p),content=await page.getTextContent();full+=content.items.map(it=>it.str).join(' ')+'\n'}
+    return expenseImportParseLines(full);
+  }
+  if((file.type||'').startsWith('image/')){
+    await expenseImportLoadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js','Tesseract');
+    const res=await Tesseract.recognize(file,'eng');
+    return expenseImportParseLines(res?.data?.text||'');
+  }
+  return null;
+}
+async function expenseImportHandleFiles(input){
+  const files=Array.from(input.files||[]);
+  if(!files.length)return;
+  const statusEl=document.getElementById('expImportStatus'),previewEl=document.getElementById('expImportPreview');
+  previewEl.innerHTML='';expImportRows=[];
+  const notes=[];
+  for(let fi=0;fi<files.length;fi++){
+    const file=files[fi];
+    if(file.size>8*1024*1024){notes.push('⚠️ "'+file.name+'" is over 8 MB — skipped.');continue}
+    statusEl.textContent='⏳ Reading '+(fi+1)+' of '+files.length+': '+file.name+'...';
+    let rows=null,fileMeta=null;
+    try{
+      fileMeta={name:file.name,type:file.type||'application/octet-stream',size:file.size,data:await readExpenseFile(file)};
+      rows=await expenseImportExtractRows(file);
+      if(rows===null){notes.push('⚠️ "'+file.name+'" is an unsupported file type — skipped.');continue}
+    }catch(err){
+      console.error(err);
+      notes.push((err&&err.message==='load-failed')?'⚠️ Needs internet to read "'+file.name+'" (reader download failed).':'⚠️ Could not auto-read "'+file.name+'".');
+      rows=[];
+    }
+    if(!rows.length && fileMeta){
+      rows=[{sel:true,title:file.name.replace(/\.[^.]+$/,''),amount:'',date:new Date().toISOString().slice(0,10),category:''}];
+    }
+    if(rows.length && fileMeta) rows[0].bill=fileMeta;
+    rows.forEach(r=>{r.dup=expenseImportIsDuplicate(r);if(r.dup)r.sel=false});
+    expImportRows=expImportRows.concat(rows);
+  }
+  const found=expImportRows.length;
+  let msg=found?('✅ Found '+found+' possible expense'+(found===1?'':'s')+' across '+files.length+' file'+(files.length===1?'':'s')+'. Duplicates are unchecked — review, edit or remove, then add.'):'⚠️ Could not read the selected file(s).';
+  if(notes.length)msg+=' '+notes.join(' ');
+  statusEl.textContent=msg;
+  expenseImportRenderPreview();
+}
+const EXPENSE_IMPORT_HEADERS={date:['date','txn date','tran date','transaction date','value date','value dt'],desc:['description','narration','particulars','details','remarks','transaction details','transaction remarks','description/narration'],debit:['debit','withdrawal','withdrawal amt','withdrawal amt.','withdrawal amount','dr','debit amount'],credit:['credit','deposit','deposit amt','deposit amt.','deposit amount','cr','credit amount'],amount:['amount','amt','value']};
+function expenseImportFindHeaderRow(rows){
+  for(let i=0;i<Math.min(rows.length,10);i++){
+    const cells=rows[i].map(c=>String(c||'').toLowerCase().trim());
+    let hits=0;
+    for(const key in EXPENSE_IMPORT_HEADERS){if(cells.some(c=>EXPENSE_IMPORT_HEADERS[key].includes(c)))hits++}
+    if(hits>=2)return i;
+  }
+  return -1;
+}
+function expenseImportParseTable(rows){
+  rows=(rows||[]).map(r=>Array.isArray(r)?r:[]).filter(r=>r.some(c=>String(c||'').trim()!==''));
+  if(!rows.length)return[];
+  const headerIdx=expenseImportFindHeaderRow(rows),out=[];
+  if(headerIdx>=0){
+    const headers=rows[headerIdx].map(c=>String(c||'').toLowerCase().trim());
+    const colIndex=key=>headers.findIndex(h=>EXPENSE_IMPORT_HEADERS[key].includes(h));
+    const dateCol=colIndex('date'),descCol=colIndex('desc'),debitCol=colIndex('debit'),creditCol=colIndex('credit'),amtCol=colIndex('amount');
+    for(let i=headerIdx+1;i<rows.length;i++){
+      const r=rows[i];
+      const rawDate=dateCol>=0?r[dateCol]:'';
+      const desc=descCol>=0?r[descCol]:r.filter((_,ci)=>![dateCol,debitCol,creditCol,amtCol].includes(ci)).join(' ');
+      let amt=0;
+      if(debitCol>=0&&expenseImportNum(r[debitCol])>0)amt=expenseImportNum(r[debitCol]);
+      else if(amtCol>=0&&expenseImportNum(r[amtCol])!==0)amt=Math.abs(expenseImportNum(r[amtCol]));
+      if(!amt)continue;
+      const date=expenseImportNormalizeDate(rawDate);
+      out.push({sel:true,title:String(desc||'Imported expense').trim().slice(0,60)||'Imported expense',amount:amt,date:date||new Date().toISOString().slice(0,10),category:expenseImportGuessCategory(desc)});
+    }
+  }else{
+    rows.forEach(r=>{const parsed=expenseImportParseLine(r.join(' '));if(parsed)out.push(parsed)});
+  }
+  return out.slice(0,200);
+}
+function expenseImportParseDelimited(text){
+  const firstLine=(text.split(/\r?\n/)[0]||'');
+  const delim=text.includes('\t')?'\t':((firstLine.split(';').length>firstLine.split(',').length)?';':',');
+  const rows=text.split(/\r?\n/).filter(l=>l.trim()!=='').map(line=>{
+    const out=[];let cur='',inQ=false;
+    for(let i=0;i<line.length;i++){const c=line[i];if(c==='"'){inQ=!inQ;continue}if(c===delim&&!inQ){out.push(cur);cur='';continue}cur+=c}
+    out.push(cur);return out.map(v=>v.trim());
+  });
+  return expenseImportParseTable(rows);
+}
+function expenseImportParseLines(text){
+  return (text||'').split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(expenseImportParseLine).filter(Boolean).slice(0,200);
+}
+function expenseImportKnownAppPattern(line){
+  let m=line.match(/(?:you\s+)?paid\s*(?:inr|rs\.?|₹)?\s*([\d,]+(?:\.\d{1,2})?)\s*to\s+([A-Za-z0-9 .&'-]{2,40})/i);
+  if(m)return{amount:expenseImportNum(m[1]),title:m[2].trim()};
+  m=line.match(/(?:a\/?c\s*[\w*]*\s*)?debit(?:ed)?\s*(?:by|with|for)?\s*(?:inr|rs\.?|₹)?\s*([\d,]+(?:\.\d{1,2})?)/i);
+  if(m){
+    const vpa=line.match(/(?:to|vpa)\s*[:\-]?\s*([a-z0-9.\-_]{2,30}@[a-z]{2,20})/i);
+    return{amount:expenseImportNum(m[1]),title:vpa?vpa[1]:''};
+  }
+  return null;
+}
+function expenseImportParseLine(line){
+  if(!line)return null;
+  const known=expenseImportKnownAppPattern(line);
+  const dateMatch=line.match(/\b(\d{1,2}[\/\-.]\d{1,2}[\/\-.]\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{2,4})\b/i);
+  const date=dateMatch?expenseImportNormalizeDate(dateMatch[1]):'';
+  if(known&&known.amount){
+    const desc=(known.title||line.replace(dateMatch?dateMatch[0]:'','')).replace(/\s{2,}/g,' ').trim().slice(0,60)||'Imported expense';
+    return{sel:true,title:desc,amount:known.amount,date:date||new Date().toISOString().slice(0,10),category:expenseImportGuessCategory(desc)};
+  }
+  const amtMatches=[...line.matchAll(/(?:₹|rs\.?|inr)?\s?(\d{1,3}(?:,\d{2,3})*(?:\.\d{1,2})?)\b/gi)].filter(m=>expenseImportNum(m[1])>0);
+  if(!amtMatches.length)return null;
+  const last=amtMatches[amtMatches.length-1],amount=expenseImportNum(last[1]);
+  if(!amount)return null;
+  let desc=line.replace(last[0],'').replace(dateMatch?dateMatch[0]:'','').replace(/\s{2,}/g,' ').trim();
+  desc=desc.replace(/^[-:|•\s]+|[-:|•\s]+$/g,'');
+  if(!desc)desc='Imported expense';
+  return {sel:true,title:desc.slice(0,60),amount,date:date||new Date().toISOString().slice(0,10),category:expenseImportGuessCategory(desc)};
+}
+function expenseImportNum(v){if(v==null)return 0;const n=parseFloat(String(v).replace(/[^0-9.\-]/g,''));return isNaN(n)?0:n}
+function expenseImportNormalizeDate(raw){
+  if(!raw)return'';
+  raw=String(raw).trim();let m;
+  if(m=raw.match(/^(\d{4})-(\d{2})-(\d{2})/))return m[1]+'-'+m[2]+'-'+m[3];
+  if(m=raw.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/)){
+    let d=m[1].padStart(2,'0'),mo=m[2].padStart(2,'0'),y=m[3].length===2?('20'+m[3]):m[3];
+    if(Number(mo)>12&&Number(d)<=12){const t=d;d=mo;mo=t}
+    return y+'-'+mo+'-'+d;
+  }
+  const months={jan:1,feb:2,mar:3,apr:4,may:5,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12};
+  if(m=raw.match(/^(\d{1,2})\s+([A-Za-z]{3,})\s+(\d{2,4})$/)){
+    const mo=months[m[2].slice(0,3).toLowerCase()];
+    if(mo)return(m[3].length===2?'20'+m[3]:m[3])+'-'+String(mo).padStart(2,'0')+'-'+m[1].padStart(2,'0');
+  }
+  const dt=new Date(raw);
+  if(!isNaN(dt.getTime()))return dt.toISOString().slice(0,10);
+  return'';
+}
+const EXPENSE_IMPORT_STOPWORDS=new Set(['paid','to','from','upi','payment','payments','transfer','purchase','pos','txn','debit','debited','credit','credited','the','and','for','at','via','ref','no','account','imported','expense','received','sent','bank','online']);
+function expenseImportMerchantKey(text){
+  const tokens=String(text||'').toLowerCase().replace(/[^a-z0-9@. ]/g,' ').split(/\s+/).filter(Boolean);
+  const tok=tokens.find(t=>t.length>=3 && !EXPENSE_IMPORT_STOPWORDS.has(t) && !/^\d+$/.test(t));
+  return tok||'';
+}
+function expenseImportRememberCategory(row){
+  if(!row||!row.category)return;
+  const key=expenseImportMerchantKey(row.title);
+  if(!key)return;
+  if(typeof d.expenseCategoryMemory!=='object'||!d.expenseCategoryMemory)d.expenseCategoryMemory={};
+  d.expenseCategoryMemory[key]=row.category;
+}
+function expenseImportGuessCategory(text){
+  const key=expenseImportMerchantKey(text);
+  if(key && d.expenseCategoryMemory && d.expenseCategoryMemory[key])return d.expenseCategoryMemory[key];
+  const t=String(text||'').toLowerCase();
+  const map=[[/swiggy|zomato|restaurant|food|cafe|hotel|dine/,'Food & Dining'],[/rent|landlord/,'Rent & Home'],[/grocer|bigbasket|dmart|supermarket/,'Groceries'],[/petrol|diesel|fuel|hpcl|iocl|bpcl/,'Fuel'],[/uber|ola\b|\bbus\b|metro|transport|irctc|train/,'Transport'],[/amazon|flipkart|myntra|shop/,'Shopping'],[/electricity|water bill|utility|gas bill/,'Bills & Utilities'],[/recharge|mobile|airtel|jio|vodafone|\bvi\b/,'Mobile & Recharge'],[/hospital|pharmacy|medical|doctor|clinic/,'Health & Medical'],[/school|college|\bfee\b|tuition|course/,'Education'],[/movie|netflix|prime|hotstar|entertainment/,'Entertainment'],[/flight|travel|makemytrip|irctc/,'Travel'],[/\bemi\b/,'EMI'],[/\bloan\b/,'Loan'],[/insurance|\blic\b/,'Insurance'],[/gift|donat/,'Gifts & Donations']];
+  for(const [re,cat] of map)if(re.test(t))return cat;
+  return'';
+}
+function expenseImportRenderPreview(){
+  const el=document.getElementById('expImportPreview');if(!el)return;
+  if(!expImportRows.length){el.innerHTML='';return}
+  el.innerHTML='<div class="expense-import-list">'+expImportRows.map((r,i)=>
+    '<div class="expense-import-row"><input type="checkbox" '+(r.sel?'checked':'')+' onchange="expImportRows['+i+'].sel=this.checked">'
+    +'<div>'
+    +(r.dup?'<div class="expense-import-dup">⚠️ Possible duplicate — looks already added on this date/amount</div>':'')
+    +(r.bill?.name?'<div class="expense-import-dup" style="color:#6d28d9">📎 Source file will be attached: '+esc(r.bill.name)+'</div>':'')
+    +'<div class="expense-import-fields">'
+    +'<input type="text" value="'+esc(r.title)+'" placeholder="Title" oninput="expImportRows['+i+'].title=this.value">'
+    +'<input type="number" value="'+esc(r.amount)+'" placeholder="Amount" oninput="expImportRows['+i+'].amount=this.value">'
+    +'<input type="date" value="'+esc(r.date)+'" onchange="expImportRows['+i+'].date=this.value">'
+    +'<select onchange="expImportRows['+i+'].category=this.value;expenseImportRememberCategory(expImportRows['+i+'])">'+categoryOptions(r.category)+'</select>'
+    +'</div></div></div>'
+  ).join('')+'</div>'
+  +'<div class="expense-import-actions"><label><input type="checkbox" '+(expImportRows.every(r=>r.sel)?'checked':'')+' onchange="expenseImportToggleAll(this.checked)"> Select all</label>'
+  +'<button type="button" onclick="expenseImportConfirm()">＋ Add Selected to Expenses</button></div>';
+}
+function expenseImportToggleAll(v){expImportRows.forEach(r=>r.sel=v);expenseImportRenderPreview()}
+function expenseImportConfirm(){
+  const selected=expImportRows.filter(r=>r.sel&&expenseImportNum(r.amount)>0);
+  if(!selected.length){alert('Please select at least one expense with a valid amount to add.');return}
+  const dupCount=selected.filter(r=>r.dup).length;
+  if(dupCount && !confirm(dupCount+' selected item(s) look like duplicates of expenses you already have. Add them anyway?'))return;
+  selected.forEach((r,i)=>{
+    const o={id:Date.now()+i,title:(String(r.title||'Imported expense').trim())||'Imported expense',person:'',amount:expenseImportNum(r.amount),date:r.date||new Date().toISOString().slice(0,10),category:r.category||'',paymentType:''};
+    if(r.bill)o.bill={name:r.bill.name,type:r.bill.type,size:r.bill.size,data:r.bill.data};
+    if(o.category)expenseImportRememberCategory(o);
+    d.expenses.unshift(o);
+  });
+  expImportRows=[];
+  closeForm();save();
 }
 function add(e,type){saveForm(e,type,null)}
 function del(k,id){d[k]=d[k].filter(x=>x.id!==id);save()}
@@ -5954,6 +6207,7 @@ function ensureData(){
   if(typeof d.appLockRecoveryCode!=='string') d.appLockRecoveryCode='';
   if(typeof d.appLockBiometricEnabled!=='boolean') d.appLockBiometricEnabled=false;
   if(typeof d.appLockBiometricCredId!=='string') d.appLockBiometricCredId='';
+  if(typeof d.expenseCategoryMemory!=='object'||!d.expenseCategoryMemory) d.expenseCategoryMemory={};
   return true;
 }
 function bufToB64u(buf){ const bytes=new Uint8Array(buf); let bin=''; for(let i=0;i<bytes.length;i++) bin+=String.fromCharCode(bytes[i]); return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
