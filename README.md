@@ -8,3 +8,10 @@ Added:
 - Monthly Report: choose a month, view expenses + salary + EMI and download CSV.
 - Existing EMI repayment schedule, Loan, Salary, Expenses and backup features retained.
 - Responsive mobile/desktop UI.
+
+
+## iMobile-inspired UI update
+- Added `imobile-inspired.css` for an orange/white modern banking-style interface.
+- Existing MithraQ data structures, pages, reports, document vault and local persistence are preserved.
+- Added `data-safety.js`, which stores up to 5 point-in-time safety snapshots in a separate IndexedDB database before persistence.
+- No migration/reset/clear operation is performed by the UI update.

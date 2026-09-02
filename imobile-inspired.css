@@ -1,0 +1,191 @@
+
+/* MithraQ — iMobile-inspired visual layer
+   Keeps the existing MithraQ structure and functionality intact.
+   This is an original visual treatment inspired by modern Indian banking apps,
+   not a copy of proprietary assets or screens. */
+
+:root{
+  --mq-orange:#f26522;
+  --mq-orange-2:#ff8a3d;
+  --mq-orange-soft:#fff1e8;
+  --mq-bg:#f5f6f8;
+  --mq-text:#20252b;
+  --mq-muted:#707781;
+  --mq-border:#e8eaed;
+  --mq-shadow:0 8px 24px rgba(31,36,42,.08);
+}
+html,body{background:var(--mq-bg)!important;color:var(--mq-text)!important}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif!important}
+.app,.main{background:var(--mq-bg)!important}
+
+/* Desktop shell */
+.sidebar{
+  width:250px!important;
+  background:#fff!important;
+  border-right:1px solid var(--mq-border)!important;
+  box-shadow:none!important;
+  padding:20px 14px!important;
+}
+.logo{margin:0 8px 24px!important}
+.logoicon,.logo3d{
+  background:linear-gradient(145deg,var(--mq-orange),var(--mq-orange-2))!important;
+  box-shadow:0 7px 18px rgba(242,101,34,.28)!important;
+  border-radius:13px!important;
+}
+.logo b{color:#171a1e!important}
+.logo small{color:#8b9199!important}
+.nav-group-title{
+  color:#9298a0!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  text-transform:uppercase!important;
+  letter-spacing:.8px!important;
+  margin:14px 10px 6px!important;
+}
+nav button{
+  color:#4e555e!important;
+  border-radius:10px!important;
+  transition:background .18s,transform .18s,color .18s!important;
+}
+nav button.active,nav button:hover{
+  background:var(--mq-orange-soft)!important;
+  color:var(--mq-orange)!important;
+  transform:none!important;
+}
+.main{margin-left:250px!important;padding:20px 26px 36px!important;max-width:1500px!important}
+
+/* Top bar */
+.top{
+  min-height:56px!important;
+  margin-bottom:16px!important;
+}
+.top h1{font-size:24px!important;color:#20252b!important}
+.top small,.title small,.welcome small{color:var(--mq-orange)!important}
+.iconbtn{
+  border:1px solid var(--mq-border)!important;
+  box-shadow:none!important;
+  color:#3f464e!important;
+}
+
+/* Banking-style cards */
+.card,.stat,.hero,.welcome,.report,.reportgrid button,
+.filterbox,.reportstat,.settings>*,.chit-summary>div{
+  border:1px solid var(--mq-border)!important;
+  box-shadow:var(--mq-shadow)!important;
+  border-radius:16px!important;
+}
+.hero,.welcome{
+  background:#fff!important;
+}
+.balance{
+  background:linear-gradient(135deg,#ef5a1f 0%,#f47a32 58%,#ff9a4b 100%)!important;
+  box-shadow:0 12px 28px rgba(242,101,34,.24)!important;
+  border-radius:16px!important;
+}
+.balance strong{letter-spacing:-.4px!important}
+.coin{
+  background:rgba(255,255,255,.18)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)!important;
+}
+.link,.head button{color:var(--mq-orange)!important}
+.add,.save,.downloadrow button,.report-download-primary,.backup-ui-primary{
+  background:linear-gradient(135deg,var(--mq-orange),var(--mq-orange-2))!important;
+}
+.bar i,.bar{
+  background:linear-gradient(#ff9a4b,#ef5a1f)!important;
+}
+.amount{color:#22272d!important}
+.muted{color:#858c95!important}
+.row{border-color:#eceef1!important}
+
+/* Quick action/service surfaces */
+.quick-access,.quick-actions,.service-grid,.services-grid{
+  gap:10px!important;
+}
+.quick-access button,.quick-actions button,.service-grid button,.services-grid button{
+  border:1px solid var(--mq-border)!important;
+  background:#fff!important;
+  color:#2d3339!important;
+  border-radius:13px!important;
+  box-shadow:none!important;
+}
+.quick-access button:hover,.quick-actions button:hover,
+.service-grid button:hover,.services-grid button:hover{
+  background:var(--mq-orange-soft)!important;
+  color:var(--mq-orange)!important;
+}
+
+/* Mobile app feel */
+@media(max-width:900px){
+  .sidebar{
+    width:76px!important;
+    background:#fff!important;
+  }
+  .main{margin-left:76px!important;padding:16px!important}
+}
+@media(max-width:600px){
+  body{background:#f5f6f8!important}
+  .main{margin:0!important;padding:12px 12px 100px!important}
+  .top{background:#fff!important;border:1px solid var(--mq-border)!important;border-radius:14px!important;padding:9px 11px!important;box-shadow:0 5px 18px rgba(31,36,42,.06)!important}
+  .top h1{font-size:19px!important}
+  .hero,.welcome{padding:17px!important;border-radius:15px!important}
+  .balance{border-radius:15px!important;padding:18px!important}
+  .stats{gap:8px!important}
+  .stat{border-radius:13px!important;padding:12px!important}
+  .stat b{font-size:16px!important}
+  .mobile-bottom-actions,.sidebar{
+    background:#fff!important;
+    border:1px solid #e6e8eb!important;
+    box-shadow:0 8px 28px rgba(30,34,39,.12)!important;
+  }
+  .mobile-quick{
+    background:#fff!important;
+    color:#555c65!important;
+    box-shadow:none!important;
+  }
+  .mobile-quick.active,.mobile-quick:hover{color:var(--mq-orange)!important}
+  .mobile-menu-btn{
+    background:linear-gradient(145deg,var(--mq-orange),var(--mq-orange-2))!important;
+    box-shadow:0 9px 24px rgba(242,101,34,.30)!important;
+  }
+  .mobile-menu-card{
+    background:#fff!important;
+    border-radius:20px!important;
+    border:1px solid var(--mq-border)!important;
+    box-shadow:0 20px 60px rgba(20,24,28,.18)!important;
+  }
+  .mobile-menu-snapshot{
+    background:linear-gradient(135deg,#fff5ee,#fff)!important;
+    box-shadow:inset 0 0 0 1px #ffe2d2!important;
+  }
+  .mobile-menu-section-title,.mobile-quick-add-title{color:var(--mq-orange)!important}
+  .mobile-menu-section-grid button,.mobile-quick-add button{
+    background:#fff!important;
+    border:1px solid var(--mq-border)!important;
+    color:#343a40!important;
+  }
+  .mobile-menu-section-grid button:hover,.mobile-quick-add button:hover{
+    background:var(--mq-orange-soft)!important;
+    color:var(--mq-orange)!important;
+  }
+}
+
+/* Keep dark mode functional, but use warm banking accent */
+.dark{
+  background:#111315!important;
+  color:#f4f5f6!important;
+}
+.dark .sidebar,.dark .card,.dark .stat,.dark .hero,.dark .welcome,
+.dark .report,.dark .reportgrid button,.dark .iconbtn,.dark .mobile-menu-card{
+  background:#1a1d20!important;
+  border-color:#2c3035!important;
+  color:#f4f5f6!important;
+}
+.dark .top{background:#1a1d20!important;border-color:#2c3035!important}
+.dark .amount{color:#f4f5f6!important}
+.dark .row{border-color:#2c3035!important}
+.dark nav button{color:#b9bec5!important}
+.dark nav button.active,.dark nav button:hover{
+  background:#382319!important;color:#ff9a65!important;
+}
+.dark .mobile-quick{background:#1a1d20!important;color:#c2c7cd!important}
